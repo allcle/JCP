@@ -10,3 +10,6 @@
    * GitHub (code version management, document management)
    * Slack (community, reference share)
    * google docs (just for write minutes)
+
+### check for cooperate complete
+   * collaborator는 근화씨 근주 저만 할게요!
