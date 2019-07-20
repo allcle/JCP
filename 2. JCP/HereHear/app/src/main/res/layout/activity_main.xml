@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/MainActivity_ViewPager_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/MainActivity_AppBarLayout_barLayout"
+            android:layout_alignParentTop="true"/>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/MainActivity_AppBarLayout_barLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/MainActivity_TabLayout_tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tabHeight"
+                android:background="@color/colorPrimary"
+                app:tabMode="fixed"
+                app:tabGravity="fill"
+                app:tabTextColor="@android:color/darker_gray"
+                app:tabSelectedTextColor="@android:color/black"
+                app:tabIndicatorColor="#ffffff"
+                app:tabIndicatorHeight="3dp"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
