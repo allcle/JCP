@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+    앱에서 어떠한 색상 값을 필요로 할 때
+    본 colors.xml 파일에 저장하고
+    Activity.java 파일에서 필요할 때
+
+    getResource().getColor(R.colors.이름);
+
+    으로 호출하여 사용한다.
+
+-->
+
+<resources>
+    <!-- 기본 테마 색 정의 -->
+    <color name="colorPrimary">#87BCB7</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+
+</resources>

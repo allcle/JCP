@@ -1,4 +1,5 @@
-# team name : JCP
+# team name : JCP 
+(justice, Communication, Personal)....(Java c++ Python....)
 
 ### Hongik.univ computer programming major graduation project
 
