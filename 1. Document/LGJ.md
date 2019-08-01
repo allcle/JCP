@@ -20,7 +20,11 @@
 ## cry detection
 1. 먼저 crawling한 데이터를 준비한다
 2. keras를 통해 pc에서 mobile net을 구현한다 (on device 형태로 구현할 예정이므로 연산량이 적어야한다. 이 때 mobile net이 제일 좋다.)
-3. 모든 파라미터를 h5파일로 저장한 후, raspberry pi에서 load 후, 실행
+3. parameter들=> 즉, model.save를 h5파일로 한다.
+
+## keras on raspberry pi
+1. keras를 raspberry pi에 다운로드 한다 (링크 : https://nextus.tistory.com/18?category=762131)
+2. aspberry pi에서 h5를 load 후, 실행
 
 ## connection between raspberry pi and application
 1. 
