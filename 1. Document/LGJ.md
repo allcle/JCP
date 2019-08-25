@@ -28,3 +28,6 @@
 
 ## connection between raspberry pi and application
 1. 
+
+## streaming reference
+1. http://www.3demp.com/community/boardDetails.php?cbID=234
