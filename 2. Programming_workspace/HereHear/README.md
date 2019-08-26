@@ -21,3 +21,16 @@ README.md 는 기호에 맞게 수정하셔도 됩니다.
 * 기타 Activity, Fragment 주석 참고.
 * 디자인 가이드 필요 - 사이즈, 이미지파일, 회의 때 사용한 스토리보드
 * Github 협업 유의사항 설명가이드 필요.
+
+
+
+##### 19.08.19.근화 190819SttFragment작업 - 변경사항 및 이슈
+
+* STT Fragment 작업 및 테스트 성공
+
+---
+
+###### TODO List
+
+* 현재 모든 대화가 완료된 시점에 결과 자막을 보여주는데 중간에 계속해서 텍스트가 수정되도록 onPartialResults 메서드를 사용해서 수정 구현할것.
+* Cry Fragment RecyclerView 구현 및 AsyncTask 클래스를 통한 라즈베리파이 통신구현.

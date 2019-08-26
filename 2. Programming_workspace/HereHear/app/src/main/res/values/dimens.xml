@@ -17,4 +17,9 @@
     <!-- 아래 탭바 세로 길이 -->
     <dimen name="tabHeight">100dp</dimen>
 
+    <!-- Stt Fragment -->
+    <dimen name="SttFragment_dictateWidth">350dp</dimen>
+    <dimen name="SttFragment_dictateHeight">200dp</dimen>
+    <dimen name="SttFragment_dictatePadding">20dp</dimen>
+
 </resources>
