@@ -27,9 +27,12 @@
 2. aspberry pi에서 h5를 load 후, 실행
 
 ## connection between raspberry pi and application
-1. socket : http://blog.naver.com/cosmosjs/220714273636
-http://www.masterqna.com/android/88918/%EB%9D%BC%EC%A6%88%EB%B2%A0%EB%A6%AC%ED%8C%8C%EC%9D%B4-%ED%8C%8C%EC%9D%B4%EC%8D%AC%EA%B3%BC-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C%EC%8A%A4%ED%8A%9C%EB%94%94%EC%98%A4-%EC%9E%90%EB%B0%94-%EC%86%8C%EC%BC%93%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EC%A7%88%EB%AC%B8%EC%9E%85%EB%8B%88%EB%8B%A4
+1. socket : ref)
+- http://blog.naver.com/cosmosjs/220714273636
+- http://www.masterqna.com/android/88918/%EB%9D%BC%EC%A6%88%EB%B2%A0%EB%A6%AC%ED%8C%8C%EC%9D%B4-%ED%8C%8C%EC%9D%B4%EC%8D%AC%EA%B3%BC-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C%EC%8A%A4%ED%8A%9C%EB%94%94%EC%98%A4-%EC%9E%90%EB%B0%94-%EC%86%8C%EC%BC%93%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EC%A7%88%EB%AC%B8%EC%9E%85%EB%8B%88%EB%8B%A4
+==============================================================
 2. using server
 
 ## streaming reference
 1. http://www.3demp.com/community/boardDetails.php?cbID=234
+rt
