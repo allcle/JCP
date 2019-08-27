@@ -27,7 +27,8 @@
 2. aspberry pi에서 h5를 load 후, 실행
 
 ## connection between raspberry pi and application
-1. 
+1. socket : http://blog.naver.com/cosmosjs/220714273636
+2. using server
 
 ## streaming reference
 1. http://www.3demp.com/community/boardDetails.php?cbID=234
