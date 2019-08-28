@@ -18,5 +18,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <!-- Stt 번역 칸 테마 색 -->
+    <color name="SttFragment_dictate">#E0FCFF</color>
 
 </resources>

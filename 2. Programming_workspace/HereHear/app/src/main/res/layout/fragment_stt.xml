@@ -5,10 +5,34 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.SttFragment">
 
-    <TextView
-        android:gravity="center"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="STT 기능 들어갈 프레그먼트" />
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/SttFragment_ImageView_Mic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_mic_off" />
+
+        <TextView
+            android:id="@+id/SttFragment_TextView_announce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/SttFragment_touchMic"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/SttFragment_TextView_dictate"
+            android:layout_marginTop="20dp"
+            android:layout_width="@dimen/SttFragment_dictateWidth"
+            android:layout_height="@dimen/SttFragment_dictateHeight"
+            android:padding="@dimen/SttFragment_dictatePadding"
+            android:background="@color/SttFragment_dictate"
+            android:gravity="center"/>
+
+    </LinearLayout>
 
 </FrameLayout>
