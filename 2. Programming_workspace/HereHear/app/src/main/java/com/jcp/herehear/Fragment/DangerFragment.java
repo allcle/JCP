@@ -40,6 +40,7 @@ import org.json.JSONObject;
 
 public class DangerFragment extends Fragment {
 
+    // sendToDjango에서 찾는 경로 : /storage/emulated/0/Recorded/audio.wav
     final private static String RECORD_FILE = "/sdcard/tempRecorded.wav";
     MediaRecorder recorder;
 
@@ -55,12 +56,11 @@ public class DangerFragment extends Fragment {
     // 저장 파일을 임시 폴더로 옮기도록
     // 매번 저장이 제대로 되는지 확인
     // 파일 conflict나지 않도록 조정
-    // 버튼 클릭이 아닌 4초마다 스플릿해서 이거 호출하고, 버튼 클릭되면 동작 종료되도록 구현
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Log.d("1", "DangerFragment Constructer wawawawawa");
+        Log.d("1", "********************* DangerFragment Constructer *********************");
 
         View view = inflater.inflate(R.layout.fragment_danger, container, false);
 
@@ -69,63 +69,53 @@ public class DangerFragment extends Fragment {
         final String ASR_URL="http://localhost:8000/uploads/simple/";
 
         // record 버튼을 클릭했을 때 호출되는 onClick method.
-        /*
-
-         */
         recordBtn.setOnClickListener(new View.OnClickListener() {
             public void startRecoding(){
-                Log.d("msg", "recordBtn의 startRecoding 동작! - 4초마다 수행 요망");
+                Log.d("msg", "#### recordBtn의 startRecoding 동작!");
                 if (recorder != null) {
                     try{
                         recorder.stop();
                         recorder.release(); // release위치가 여기가 맞나..?
                     } catch (RuntimeException e){
-                        Log.d("msg", "recordBtn의 startRecoding에서 recorder.stop()를 수행하고자 했으나 에러 발생. 즉, 기존의 동작중인 recorder가 없다.");
+                        Log.d("msg", "#### recordBtn의 startRecoding에서 recorder.stop()를 수행하고자 했으나 에러 발생. 즉, 기존의 동작중인 recorder가 없다.");
                     } finally{
                         //recorder.release(); // 원래 release 위치는 여기였다. 에러 해결을 위해 try문으로 이동시켜본 상황.
                         recorder = null;
                     }
-                    //recorder.release();
-                    //recorder = null;
                 }
+
                 // 새 recorder 동작.
-
                 recorder = new MediaRecorder();
-
                 recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
                 recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
                 recorder.setOutputFile(RECORD_FILE);
 
-                Log.d("msg", "recordBtn의 startRecoding에서 새로운 recorder 설정 완료.");
+                Log.d("msg", "#### recordBtn의 startRecoding에서 새로운 recorder 설정 완료.");
                 try {
                     recorder.prepare();
                     recorder.start();
-                    Log.d("msg", "recordBtn의 startRecoding에서 새로운 recorder.start() 성공!.");
+                    Log.d("msg", "#### recordBtn의 startRecoding에서 새로운 recorder.start() 성공!.");
                 } catch (Exception ex) {
                     Log.e("SampleAudioRecorder", "Exception : ", ex);
                 }
             }
 
             public void endRecoding(){
-                Log.d("msg", "recordBtn의 endRecoding 동작!");
-                if (recorder == null)
-                    return;
-                //recorder.stop(); // recorder 관련 3줄의 코드는 원래 있는 코드였는데, 에러 해결을 위해 주석처리한 상황
-                //recorder.release();
-                //recorder = null;
-                Log.d("msg", "recordBtn의 endRecoding에서 recorder 중단 성공!");
+                Log.d("msg", "@@@@ recordBtn의 endRecoding 동작!");
+                if (recorder == null) return;
 
                 ContentValues values = new ContentValues(10);
 
                 //mTimer.cancel(); // mTimer을 여기서 중단시키는 코드가 원래 있었는데, 논리 상 안맞고 타이머가 중단되므로 주석처리한 상황
 
-                // 이부분이 values를 저장하는 부분인듯.
-                // 기존 파일이 있는지 여부 먼저 파악 후, 있으면 삭제하기
-                values.put(MediaStore.MediaColumns.TITLE, "Recorded");
-                values.put(MediaStore.Audio.Media.ALBUM, "Audio Album");
-                values.put(MediaStore.Audio.Media.ARTIST, "MIKE");
-                values.put(MediaStore.Audio.Media.DISPLAY_NAME, "Recorded Audio");
+                // 이부분이 values를 저장하는 부분.
+                // ★ ToDoList
+                // 기존 파일이 있는지 여부 먼저 파악 후, 있으면 삭제하기 기능을 구현하길 요망한다.
+                values.put(MediaStore.MediaColumns.TITLE, "JCP");
+                values.put(MediaStore.Audio.Media.ALBUM, "tempRecorded");
+                values.put(MediaStore.Audio.Media.ARTIST, "HereHear");
+                values.put(MediaStore.Audio.Media.DISPLAY_NAME, "toSendDjango");
                 values.put(MediaStore.Audio.Media.IS_RINGTONE, 1);
                 values.put(MediaStore.Audio.Media.IS_MUSIC, 1);
                 values.put(MediaStore.MediaColumns.DATE_ADDED,
@@ -133,38 +123,48 @@ public class DangerFragment extends Fragment {
                 values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/wav");
                 values.put(MediaStore.Audio.Media.DATA, RECORD_FILE);
 
-                Log.d("msg", "recordBtn의 endRecoding에서 values 저장 완료!");
+                Log.d("msg", "@@@@ recordBtn의 endRecoding에서 values 저장 완료!");
                 Log.d("msg-values : ", String.valueOf(values));
 
+                // ★★★ToDoList1. audioUri = null로 되어있다. 해결해야하는 문제.
+                // 현재 설정한 저장위치는 _data=/sdcard/tempRecorded.wav ( = RECORD_FILE)
+                // 밑의 sendDjango와 경로 맞춰줘야한다.
+                // HereHear앱에서 "파일"앱의 데이터베이스에 접근하기 위한 기능인듯?
+                // 근데 현재 실질적으로 사용되지 않는다. Django에 보내기 위한 파일을 sdcard에 직접접근하기 때문. 고로 해당 코드는 잠시 주석처리한다.
+                // 해당 ContentResolve 코드는 Django와의 통신이 마무리되면 삭제해도 무방하다.
+                /*
                 Uri audioUri = getContext().getContentResolver().insert(
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         values
                 );
-
-                Log.d("msg", "recordBtn의 endRecoding에서 values의 uri 지정 완료!");
+                Log.d("msg", "@@@@ recordBtn의 endRecoding에서 values의 uri 지정 완료!");
                 Log.d("msg-audioUri : ", String.valueOf(audioUri));
                 if(audioUri == null){
                     Log.d("SampleAudioRecorder", "Audio insert failed.");
                     return;
                 }
+                */
             }
 
-            // 실험시작
+            // ★ToDoList
+            // 실험시작 - 기능 구현이 완료되면, 사용하지 않는 코드들 모두 지우기
             @RequiresApi(api = Build.VERSION_CODES.O)
             public String sendDjango(){
                 String asrJsonString="";
                 String result = "";
                 try {
-                    Log.d("Msg","**** UPLOADING .WAV to ASR...");
+                    Log.d("Msg","**** UPLOADING .WAV to Django 동작 시작!");
                     URL obj = new URL(ASR_URL);
                     HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+                    Log.d("Msg","**** ASR_URL의 conn : " + conn);
                     //conn.setRequestProperty("X-Arg", "AccessKey=3fvfg985-2830-07ce-e998-4e74df");
                     conn.setRequestProperty("Content-Type", "audio/wav");
                     conn.setRequestProperty("enctype", "multipart/form-data");
                     conn.setRequestMethod("POST");
                     conn.setDoInput(true);
                     conn.setDoOutput(true);
-                    String wavpath= Environment.getExternalStorageDirectory().getAbsolutePath()+"/Recorded/audio.wav"; //audio.wav";
+                    String wavpath = "/sdcard/tempRecorded.wav"; // 본래 오픈소스코드는 아래와 같은 경로 설정인데, 본 프로젝트의 파일 저장 경로는 sdcard를 이용하므로 이와 같이 사용한다.
+                    // String wavpath= Environment.getExternalStorageDirectory().getAbsolutePath()+"/Recorded/audio.wav"; //audio.wav";
                     File wavfile = new File(wavpath);
                     boolean success = true;
                     if (wavfile.exists()) {
@@ -180,8 +180,17 @@ public class DangerFragment extends Fragment {
 
                     OutputStream output=null;
                     PrintWriter writer=null;
+
+                    // ★★★ ToDoList3
+                    // conn에 connect할 때 에러 발생해서 예외처리로 빠진다. 아직 Django 셋팅이 끝나지 않은 문제인듯
+                    // 위에서도 conn사용하면 에러발생한다.
+                    // Django에서 파일 업로드형식을 더 직접적 링크로 바꿔야할듯
+                    // java.net.ConnectException: Failed to connect to localhost/127.0.0.1:8000
                     try {
+                        Log.d("Msg","여기서 왜 에러가 발생할까? - 1 - conn을 처음으로 사용하는 위치");
                         output = conn.getOutputStream();
+                        Log.d("Msg","여기서 왜 에러가 발생할까? - 2 - conn을 처음으로 사용하는 위치");
+
                         writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
                         byte [] music=new byte[(int) wavfile.length()];//size & length of the file
                         InputStream             is  = new FileInputStream(wavfile);
@@ -189,12 +198,14 @@ public class DangerFragment extends Fragment {
                         DataInputStream dis = new DataInputStream(bis);      //  Create a DataInputStream to read the audio data from the saved file
                         int i = 0;
                         copyStream(dis,output);
+                    } catch(Exception e){
+                        e.printStackTrace();
+                        Log.d("Msg","Django에 wav를 전송하기 위한 데이터 처리 과정 중 에러 발생.");
                     }
-                    catch(Exception e){
 
-                    }
-
+                    Log.d("Msg","여기서 왜 에러가 발생할까? - 1 - conn을 2번째로 사용하는 위치");
                     conn.connect();
+                    Log.d("Msg","여기서 왜 에러가 발생할까? - 2 - conn을 2번째로 사용하는 위치");
 
                     int responseCode = conn.getResponseCode();
                     Log.d("Msg","POST Response Code : " + responseCode + " , MSG: " + conn.getResponseMessage());
@@ -237,6 +248,7 @@ public class DangerFragment extends Fragment {
                         result = "";
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Log.d("Msg","HTTP Exception: " + e.getLocalizedMessage());
                 }
                 return result; //"Failed to fetch data!";
@@ -266,7 +278,7 @@ public class DangerFragment extends Fragment {
             }
             // 실험 종료
 
-            // 임시 sendDjango 실험체
+            // 임시 sendDjango 실험체 백업. 위의 sendDjango가 완성되면 지워도 무방.
             @RequiresApi(api = Build.VERSION_CODES.O)
             public void TempsendDjango(){
                 // 여기서부터 실험.
@@ -386,17 +398,20 @@ public class DangerFragment extends Fragment {
                 startRecoding();
 
                 // 4초마다 반복 동작할 업무 내역.
-                // 현 상황 : mTimer가 4초마다 동작수행을 하지 않는다. 그냥 무한반복 중. 단위가 안맞을수도?? ★★★★★★★★★
                 mTask = new TimerTask(){
                     public void run(){
-                        Log.d("Msg","4초 경과! 4초마다 수행되야 정상.");
+                        Log.d("msg","4초 경과! 4초마다 수행되야 정상.");
                         // 4초마다 반복할 업무를 여기에 지정
                         endRecoding(); // 파일 저장 전에, 기존 파일 여부 확인 후 삭제
-                        // 장고연결과 startRecodinig은 Thread로 하도록 공부해보자.
+
+                        // ★★★ ToDoList4
+                        // 장고연결과 startRecodinig은 Thread하고자 하는데, 현재는 절차식으로 구동되는 듯.
+                        // Thread로 구현해야 정상적으로 4초 단위 wav파일이 생성된다.
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 // 장고와 연결하여 temp wav 전달, return값에 따라 UI에 표시
+                                Log.d("Msg","sendDjango, startRecording Thread 동작");
                                 sendDjango();
                                 startRecoding();
                             }
@@ -405,7 +420,7 @@ public class DangerFragment extends Fragment {
                 };
                 // 4초단위 Timer 설정.
                 mTimer = new Timer();
-                mTimer.schedule(mTask, 4, 4);
+                mTimer.schedule(mTask, 4000, 4000);
             }
         });
 
