@@ -19,6 +19,7 @@ def home(request):
 4) class index를 요청한 어플리케이션에게 반환
 5) 임의로 저장해둔 myfile이 충돌되면 안되므로 삭제시킨다.
 """
+
 def simple_upload(request):
     if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
