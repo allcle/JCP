@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">HereHear</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- Stt Fragment -->
     <string name="SttFragment_touchMic">마이크를 터치해 주세요</string>
     <string name="SttFragment_speakMic">소리를 듣고 있는 중입니다..</string>
 
+    <!-- Danger Fragment -->
+    <string name="DangerFragment_time">진행 시간</string>
+
+    <!-- Cry Fragment -->
 
 </resources>
