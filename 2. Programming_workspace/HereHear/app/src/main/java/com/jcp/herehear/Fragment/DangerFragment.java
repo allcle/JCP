@@ -271,8 +271,11 @@ public class DangerFragment extends Fragment {
                     Log.d("SampleAudioRecorder", "Audio insert failed.");
                     return;
                 }
-                */
             }
+
+     */
+
+            /*
 
             // ★ToDoList
             // 실험시작 - 기능 구현이 완료되면, 사용하지 않는 코드들 모두 지우기
@@ -513,9 +516,12 @@ public class DangerFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                */
                 // 여기까지 실험
             }
+
+               */
+
+            /*
 
             // onClick method에 의해 실제 동작하는 내용
             @RequiresApi(api = Build.VERSION_CODES.O)
