@@ -28,9 +28,30 @@ README.md 는 기호에 맞게 수정하셔도 됩니다.
 
 * STT Fragment 작업 및 테스트 성공
 
+
+
+##### 19.09.10.근화 190910DangerFragment작업 - 변경사항 및 이슈
+
+- 상단바 HereHear 이미지 부착
+
+- DangerFragment RecyclerView 를 통한 기초 작업 완료.
+
+- CryFragment - 재은님이 해당 코드 참고해서 작업.
+
+- 각 Play 버튼에 setOnclickListener 달아놓음 -> http 통신작업 필요.
+
+- 작업하면서 따로 커스터마이징 해야할 소스들
+
+  - src/main/java/com.jcp.herehear/Class/DangerData : 각 Danger 리스트의 정보를 담는 클래스
+  - DangerFragment 내부 클래스인 RecyclerAdapter 클래스의 listData 및 초기화 부분(생성자)
+  - 기타 onCreateView 쪽 인수님이 작업한거는 일단 주석 처리함.
+
+  
+
 ---
 
 ###### TODO List
 
 * 현재 모든 대화가 완료된 시점에 결과 자막을 보여주는데 중간에 계속해서 텍스트가 수정되도록 onPartialResults 메서드를 사용해서 수정 구현할것.
+* SttFragment UI 구조 수정 -> 가이드파일과 비슷하게.
 * Cry Fragment RecyclerView 구현 및 AsyncTask 클래스를 통한 라즈베리파이 통신구현.

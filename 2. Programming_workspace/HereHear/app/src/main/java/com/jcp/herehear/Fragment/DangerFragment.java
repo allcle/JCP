@@ -1,42 +1,30 @@
 package com.jcp.herehear.Fragment;
 
-import android.content.ContentValues;
+import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Build;
+
 import android.os.Bundle;
 
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import com.jcp.herehear.Class.DangerData;
 import com.jcp.herehear.R;
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class DangerFragment extends Fragment {
 
@@ -47,8 +35,147 @@ public class DangerFragment extends Fragment {
     private Timer mTimer;
     private TimerTask mTask;
 
+    /* View */
+    private RecyclerView recyclerView;              // 리사이클러 뷰
+    private RecyclerAdapter recyclerAdapter;        // 리사이클러 뷰 어댑터
+    private TextView txtTime;                       // 진행 시간 표시 뷰
+
     /* 생성자 */
     public DangerFragment() {
+
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_danger, container, false);
+
+        /* View 연동 */
+        recyclerView = view.findViewById(R.id.DangerFragment_RecyclerView_recyclerView);
+        txtTime = view.findViewById(R.id.DangerFragment_TextView_time);
+        txtTime.setText("00:00:00");
+
+        /* RecyclerView 처리 */
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerAdapter = new RecyclerAdapter();
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(recyclerAdapter);
+
+        return view;
+    }
+
+    private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder>{
+
+        /* 임시 데이터 */
+        private ArrayList<DangerData> listData = new ArrayList<>();
+
+        /* constructor - 임시 데이터 셋 생성 */
+        /* 추후 리스트에 나타낼 데이터의 용도에 맞게 따로 커스터마이징 해서 설정해주어야 함 */
+        public RecyclerAdapter(){
+
+            /* 구급차, 경찰차, 자동차 경적 - 예시로 생성 */
+            Drawable icon_amb = getResources().getDrawable(R.drawable.ambulance);
+            Drawable icon_pol = getResources().getDrawable(R.drawable.police);
+            Drawable icon_horn = getResources().getDrawable(R.drawable.horn);
+
+            DangerData ambulance = new DangerData("구급차", icon_amb);
+            DangerData police = new DangerData("경찰차", icon_pol);
+            DangerData horn = new DangerData("자동차 경적", icon_horn);
+
+            listData.add(ambulance);
+            listData.add(police);
+            listData.add(horn);
+
+        }
+
+        @NonNull
+        @Override
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_danger_adapter, parent, false);
+            return new ItemViewHolder(view);
+
+        }
+
+        /*
+
+            Adapter 리스트 내용이 notify 되었을 경우 onBindViewHolder 가 호출된다.
+            다음 함수에서 실제 받아온 listData 의 데이터 정보(DangerData)를 통해
+            리스트뷰의 특정 목록의 데이터를 커스터마이징 한다.
+
+        */
+        @Override
+        public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
+
+            final DangerData curData = listData.get(position);
+
+            holder.txtTypeText.setText(curData.getName());
+            holder.imgvTypeIcon.setImageDrawable(curData.getImg());
+            holder.imgvPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    /* TODO : 여기서 각 뷰의 플레이 버튼을 눌렀을 때 동작해야 하는 것을 적는다. */
+                    if(!listData.get(position).getListening()){
+                        /* 현재 리스닝 중이 아님 -> 리스닝 시작 */
+
+                        /* 이미지 아이콘 및 상태 변화 */
+                        holder.imgvPlay.setImageDrawable(getResources().getDrawable(R.drawable.play_on));
+                        holder.imgvWave.setImageDrawable(getResources().getDrawable(R.drawable.soundwave_on));
+                        listData.get(position).setListening(true);
+
+                        /* 리스닝 코드 */
+
+
+
+
+
+
+
+                    }else{
+                        /* 현재 리스닝 중임 -> 리스닝 중단 */
+
+                        /* 이미지 아이콘 변화 */
+                        holder.imgvPlay.setImageDrawable(getResources().getDrawable(R.drawable.play_off));
+                        holder.imgvWave.setImageDrawable(getResources().getDrawable(R.drawable.soundwave_off));
+                        listData.get(position).setListening(false);
+
+                        /* 리스닝 중단 코드 */
+
+
+
+
+
+                    }
+
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return listData.size();
+        }
+
+    }
+
+    private class ItemViewHolder extends RecyclerView.ViewHolder{
+
+        private ImageView imgvTypeIcon;
+        private TextView txtTypeText;
+        private ImageView imgvPlay;
+        private ImageView imgvWave;
+
+        public ItemViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            imgvTypeIcon = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_SoundTypeIcon);
+            txtTypeText = itemView.findViewById(R.id.DangerFragmentAdapter_TextView_SoundTypeName);
+            imgvPlay = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_Play);
+            imgvWave = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_Wave);
+
+        }
 
     }
 
@@ -57,6 +184,7 @@ public class DangerFragment extends Fragment {
     // 매번 저장이 제대로 되는지 확인
     // 파일 conflict나지 않도록 조정
 
+    /*
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -446,6 +574,8 @@ public class DangerFragment extends Fragment {
 
         return view;
     }
+
+    */
 
     public void onPause() {
         if(recorder != null){
