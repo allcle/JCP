@@ -6,37 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".Activity.MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/MainActivity_ViewPager_viewPager"
+        <ImageView
+            android:id="@+id/MainActivity_ImageView_topBar"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:src="@drawable/icon_title_background"/>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignTop="@+id/MainActivity_AppBarLayout_barLayout"
-            android:layout_alignParentTop="true"/>
+            android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/MainActivity_AppBarLayout_barLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/MainActivity_TabLayout_tabLayout"
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/MainActivity_ViewPager_viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/tabHeight"
-                android:background="@color/colorPrimary"
-                app:tabMode="fixed"
-                app:tabGravity="fill"
-                app:tabTextColor="@android:color/darker_gray"
-                app:tabSelectedTextColor="@android:color/black"
-                app:tabIndicatorColor="#ffffff"
-                app:tabIndicatorHeight="3dp"/>
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/MainActivity_AppBarLayout_barLayout"
+                android:layout_alignParentTop="true"/>
 
-        </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/MainActivity_AppBarLayout_barLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
 
-    </RelativeLayout>
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/MainActivity_TabLayout_tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tabHeight"
+                    android:background="@color/colorPrimary"
+                    app:tabMode="fixed"
+                    app:tabGravity="fill"
+                    app:tabTextColor="@android:color/darker_gray"
+                    app:tabSelectedTextColor="@android:color/black"
+                    app:tabIndicatorColor="#ffffff"
+                    app:tabIndicatorHeight="3dp"/>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

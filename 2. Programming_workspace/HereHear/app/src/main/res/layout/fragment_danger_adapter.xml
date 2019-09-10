@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/custom_border_center" >
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/custom_border_center">
+
+        <ImageView
+            android:id="@+id/DangerFragmentAdapter_ImageView_SoundTypeIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ambulance"/>
+
+        <TextView
+            android:id="@+id/DangerFragmentAdapter_TextView_SoundTypeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:text="구급차"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/DangerFragmentAdapter_ImageView_Play"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/play_off"/>
+
+    <ImageView
+        android:id="@+id/DangerFragmentAdapter_ImageView_Wave"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:src="@drawable/soundwave_off"
+        android:scaleType="fitXY"/>
+
+
+</LinearLayout>
