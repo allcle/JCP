@@ -126,7 +126,7 @@ public class DangerFragment extends Fragment {
                 Log.d("msg", "@@@@ recordBtn의 endRecoding에서 values 저장 완료!");
                 Log.d("msg-values : ", String.valueOf(values));
 
-                // ★★★ToDoList1. audioUri = null로 되어있다. 해결해야하는 문제.
+                // ToDoList1. audioUri = null로 되어있다. 해결해야하는 문제.
                 // 현재 설정한 저장위치는 _data=/sdcard/tempRecorded.wav ( = RECORD_FILE)
                 // 밑의 sendDjango와 경로 맞춰줘야한다.
                 // HereHear앱에서 "파일"앱의 데이터베이스에 접근하기 위한 기능인듯?
