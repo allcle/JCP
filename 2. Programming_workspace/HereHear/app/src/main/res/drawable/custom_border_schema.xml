@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+
+
+    <stroke android:width="0.5dp"
+        android:color="@color/background" />
+
+
+
+
+
+</shape>
+    <!--가운데에 열들이 중복되면 두꺼운 선을 만들어서 width=2dp를 1dp로 수정-->
