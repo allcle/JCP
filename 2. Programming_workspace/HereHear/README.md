@@ -46,7 +46,18 @@ README.md 는 기호에 맞게 수정하셔도 됩니다.
   - DangerFragment 내부 클래스인 RecyclerAdapter 클래스의 listData 및 초기화 부분(생성자)
   - 기타 onCreateView 쪽 인수님이 작업한거는 일단 주석 처리함.
 
-  
+
+
+
+##### 19.09.15.근화 190915 18:45 DangerFragment 및 CryFragment Merge - 변경사항 및 이슈
+
+- 재은님 코드 Merge (CryFragment 작업)
+- DangerFragment 아이템리스트 6개 확장(경적, 개, 드릴, 총, 사이렌, 무)
+- 각 아이템 별 재생 버튼 기능 삭제
+- DangerFragment 통합 리스닝버튼 작업 및 이미지뷰 -> GifImageView 전환
+- 통합 리스닝 버튼 on/off 시 png 변화 및 진행시간 기능 추가
+
+
 
 ---
 

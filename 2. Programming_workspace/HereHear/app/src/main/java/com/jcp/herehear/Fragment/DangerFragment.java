@@ -96,11 +96,9 @@ public class DangerFragment extends Fragment {
                     baseTime = SystemClock.elapsedRealtime();
                     myTimer.sendEmptyMessage(0);
 
-
                     /* 예시 - 이런식으로 wav 이미지 변경한다. */
                     recyclerAdapter.listData.get(0).setListening(true);
                     recyclerAdapter.notifyDataSetChanged();
-
 
                 }else{
                     /* 듣기 종료 */
