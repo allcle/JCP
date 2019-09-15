@@ -20,71 +20,108 @@
             android:gravity="center_vertical"
             android:background="@drawable/custom_border_top">
 
-<pl.droidsonroids.gif.GifImageView
-    android:layout_width="70dp"
-    android:layout_height="70dp"
-    android:src="@drawable/cry"
-    android:background="@color/RecyclerView_border"/>
+            <pl.droidsonroids.gif.GifImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="10dp"
+                android:background="@color/RecyclerView_border"
+                android:src="@drawable/cry" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
                 android:orientation="vertical"
-                android:gravity="center_vertical"
                 android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/CryFragment_time"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:text="진행 시간" />
 
                 <TextView
                     android:id="@+id/CryFragment_TextView_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="11 : 23 : 08"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:text="11 : 23 : 08" />
 
             </LinearLayout>
 
         </LinearLayout>
-        <!--밑에 블록-->
+        <!--밑에 스키마-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:background="@color/RecyclerView_border"
             >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/RecyclerView_border"
+                android:layout_height="30dp"
                 android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:padding="7dp">
+                android:orientation="horizontal"
+               >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/schema_left"
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+
+                    android:gravity="center"
+                    android:text="시간"
+                    android:textColor="@color/background"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/schema_bar"
+                    android:layout_width="1dp"
+                    android:layout_height="23dp"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/custom_border_schema"
+                    android:gravity="center"
+
+                    />
+
+                <TextView
+                    android:id="@+id/schema_right"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/CryFragment_time" />
+                    android:gravity="center"
+                    android:text="소리 크기"
+                    android:textColor="@color/background"
+                    android:textStyle="bold" />
+
 
             </LinearLayout>
 
         </LinearLayout>
+<!--        내용물 리사이클러뷰-->
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/CryFragment_RecyclerView_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_border_center" />
 
+
+
+<!--        푸터-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/custom_border_bottom">
-
-
-
         </LinearLayout>
+
+
+
 
     </LinearLayout>
 

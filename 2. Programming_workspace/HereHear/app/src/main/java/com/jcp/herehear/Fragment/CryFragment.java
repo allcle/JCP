@@ -34,7 +34,7 @@ public class CryFragment extends Fragment {
     /* View */
     private RecyclerView recyclerView;              // 리사이클러 뷰
     private RecyclerAdapter recyclerAdapter;        // 리사이클러 뷰 어댑터
-    private TextView txtTime;                       // 진행 시간 표시 뷰
+    private TextView CrytxtTime;                       // 진행 시간 표시 뷰
 
 
     /* 생성자 */
@@ -47,8 +47,8 @@ public class CryFragment extends Fragment {
 
         /* View 연동 */
         recyclerView = view.findViewById(R.id.CryFragment_RecyclerView_recyclerView);
-        txtTime = view.findViewById(R.id.CryFragment_TextView_time);
-        txtTime.setText("00:00:00");
+        CrytxtTime = view.findViewById(R.id.CryFragment_TextView_time);
+        CrytxtTime.setText("11:43:00");//진행시간 text지정
 
 
         /* RecyclerView 처리 */
@@ -74,7 +74,7 @@ private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder>
     /* 추후 리스트에 나타낼 데이터의 용도에 맞게 따로 커스터마이징 해서 설정해주어야 함
      * 현재 시안에는 cry에 시간, 소리크기가 나와있으므로 그것으로 잡음*/
     public RecyclerAdapter() {
-        /*이 친구들을 어떻게 넣어야하는것일까*/
+
         CryData tmp1 = new CryData("오전8:02", "80dB");
         CryData tmp2 = new CryData("오전11:25", "140dB");
 

@@ -22,8 +22,8 @@
     <color name="SttFragment_dictate">#cce4e3</color>
     <!--상위tab컬러-->
     <color name="TabUpper">#33bcab</color>
-    <!--백그라운드:화이트-->
-    <color name="background">#ffffff</color>
+    <!--백그라운드:누리끼리화이트-->
+    <color name="background">#fafafa</color>
     <!-- RecyclerView 표 테두리 색 -->
     <color name="RecyclerView_border">#cce4e3</color>
 
