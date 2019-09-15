@@ -16,7 +16,7 @@ public class DangerData {
 
     private String name;
     private Drawable img;
-    private Boolean isListening;
+    private boolean isListening;
 
     /* constructor */
     public DangerData(){

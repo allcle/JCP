@@ -12,6 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,9 @@ import java.util.TimerTask;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import pl.droidsonroids.gif.GifAnimationMetaData;
+import pl.droidsonroids.gif.GifImageView;
+
 public class DangerFragment extends Fragment {
 
     // sendToDjango에서 찾는 경로 : /storage/emulated/0/Recorded/audio.wav
@@ -39,11 +45,25 @@ public class DangerFragment extends Fragment {
     private RecyclerView recyclerView;              // 리사이클러 뷰
     private RecyclerAdapter recyclerAdapter;        // 리사이클러 뷰 어댑터
     private TextView txtTime;                       // 진행 시간 표시 뷰
+    private GifImageView imgvPlay;                  // 사운드 리스팅 이미지뷰
+
+    /* Listening */
+    private boolean isListening;                    // 현재 듣기 여부
+    private long baseTime;                          // 경과 시간 체크를 위한 현재 시간 저장
 
     /* 생성자 */
     public DangerFragment() {
 
     }
+
+    Handler myTimer = new Handler(){
+        public void handleMessage(Message msg){
+            txtTime.setText(getTimeOut());
+
+            //sendEmptyMessage 는 비어있는 메세지를 Handler 에게 전송하는겁니다.
+            myTimer.sendEmptyMessage(0);
+        }
+    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,6 +74,7 @@ public class DangerFragment extends Fragment {
         recyclerView = view.findViewById(R.id.DangerFragment_RecyclerView_recyclerView);
         txtTime = view.findViewById(R.id.DangerFragment_TextView_time);
         txtTime.setText("00:00:00");
+        imgvPlay = view.findViewById(R.id.DangerFragmentAdapter_ImageView_soundPlay);
 
         /* RecyclerView 처리 */
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -61,30 +82,87 @@ public class DangerFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
+        /* Listening 통신 쪽 처리 */
+        imgvPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!isListening){
+                    /* 듣기 시작 */
+                    isListening = true;
+                    imgvPlay.setImageResource(R.drawable.sound_on);
+
+                    /* 진행시간 갱신 */
+                    baseTime = SystemClock.elapsedRealtime();
+                    myTimer.sendEmptyMessage(0);
+
+
+                    /* 예시 - 이런식으로 wav 이미지 변경한다. */
+                    recyclerAdapter.listData.get(0).setListening(true);
+                    recyclerAdapter.notifyDataSetChanged();
+
+
+                }else{
+                    /* 듣기 종료 */
+                    isListening = false;
+                    imgvPlay.setImageResource(R.drawable.sound_off);
+
+                    /* 진행시간 초기화 */
+                    myTimer.removeMessages(0); //핸들러 메세지 제거
+                    txtTime.setText("00:00:00");
+
+                    /* 예시 - 이런식으로 wav 이미지 변경한다. */
+                    recyclerAdapter.listData.get(0).setListening(false);
+                    recyclerAdapter.notifyDataSetChanged();
+
+
+                }
+
+
+            }
+        });
+
         return view;
+    }
+
+    String getTimeOut(){
+        long now = SystemClock.elapsedRealtime();
+        long outTime = now - baseTime;
+        String easy_outTime = String.format("%02d:%02d:%02d", outTime/1000 / 60, (outTime/1000)%60,(outTime%1000)/10);
+        return easy_outTime;
+
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder>{
 
         /* 임시 데이터 */
-        private ArrayList<DangerData> listData = new ArrayList<>();
+        public ArrayList<DangerData> listData = new ArrayList<>();
 
         /* constructor - 임시 데이터 셋 생성 */
         /* 추후 리스트에 나타낼 데이터의 용도에 맞게 따로 커스터마이징 해서 설정해주어야 함 */
         public RecyclerAdapter(){
 
-            /* 구급차, 경찰차, 자동차 경적 - 예시로 생성 */
-            Drawable icon_amb = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_pol = getResources().getDrawable(R.drawable.police);
-            Drawable icon_horn = getResources().getDrawable(R.drawable.horn);
+            /* 경적, 개, 드릴, 총, 사이렌, nothing - 예시로 생성 */
+            Drawable icon_horn = getResources().getDrawable(R.drawable.ambulance);
+            Drawable icon_barking = getResources().getDrawable(R.drawable.police);
+            Drawable icon_drill = getResources().getDrawable(R.drawable.horn);
+            Drawable icon_gun = getResources().getDrawable(R.drawable.ambulance);
+            Drawable icon_siren = getResources().getDrawable(R.drawable.police);
+            Drawable icon_nothing = getResources().getDrawable(R.drawable.horn);
 
-            DangerData ambulance = new DangerData("구급차", icon_amb);
-            DangerData police = new DangerData("경찰차", icon_pol);
-            DangerData horn = new DangerData("자동차 경적", icon_horn);
+            DangerData horn = new DangerData("경적소리", icon_horn);
+            DangerData barking = new DangerData("개짖는소리", icon_barking);
+            DangerData drill = new DangerData("드릴소리", icon_drill);
+            DangerData gun = new DangerData("총소리", icon_gun);
+            DangerData siren = new DangerData("사이렌소리", icon_siren);
+            DangerData nothing = new DangerData("아무소리없음", icon_nothing);
 
-            listData.add(ambulance);
-            listData.add(police);
             listData.add(horn);
+            listData.add(barking);
+            listData.add(drill);
+            listData.add(gun);
+            listData.add(siren);
+            listData.add(nothing);
 
         }
 
@@ -111,45 +189,15 @@ public class DangerFragment extends Fragment {
 
             holder.txtTypeText.setText(curData.getName());
             holder.imgvTypeIcon.setImageDrawable(curData.getImg());
-            holder.imgvPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    /* TODO : 여기서 각 뷰의 플레이 버튼을 눌렀을 때 동작해야 하는 것을 적는다. */
-                    if(!listData.get(position).getListening()){
-                        /* 현재 리스닝 중이 아님 -> 리스닝 시작 */
+            if(curData.getListening()){
+                /* 듣는 중 */
+                holder.imgvWave.setImageResource(R.drawable.voice_on_light);
 
-                        /* 이미지 아이콘 및 상태 변화 */
-                        holder.imgvPlay.setImageDrawable(getResources().getDrawable(R.drawable.play_on));
-                        holder.imgvWave.setImageDrawable(getResources().getDrawable(R.drawable.soundwave_on));
-                        listData.get(position).setListening(true);
-
-                        /* 리스닝 코드 */
-
-
-
-
-
-
-
-                    }else{
-                        /* 현재 리스닝 중임 -> 리스닝 중단 */
-
-                        /* 이미지 아이콘 변화 */
-                        holder.imgvPlay.setImageDrawable(getResources().getDrawable(R.drawable.play_off));
-                        holder.imgvWave.setImageDrawable(getResources().getDrawable(R.drawable.soundwave_off));
-                        listData.get(position).setListening(false);
-
-                        /* 리스닝 중단 코드 */
-
-
-
-
-
-                    }
-
-                }
-            });
+            }else{
+                /* 안 듣는 중 */
+                holder.imgvWave.setImageResource(R.drawable.soundwave_off);
+            }
 
         }
 
@@ -164,15 +212,13 @@ public class DangerFragment extends Fragment {
 
         private ImageView imgvTypeIcon;
         private TextView txtTypeText;
-        private ImageView imgvPlay;
-        private ImageView imgvWave;
+        private GifImageView imgvWave;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imgvTypeIcon = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_SoundTypeIcon);
             txtTypeText = itemView.findViewById(R.id.DangerFragmentAdapter_TextView_SoundTypeName);
-            imgvPlay = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_Play);
             imgvWave = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_Wave);
 
         }

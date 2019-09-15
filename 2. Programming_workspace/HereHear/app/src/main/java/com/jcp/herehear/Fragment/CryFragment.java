@@ -22,20 +22,10 @@ import java.util.TimerTask;
 
 public class CryFragment extends Fragment {
 
-
-    // sendToDjango에서 찾는 경로 : /storage/emulated/0/Recorded/audio.wav
-    final private static String RECORD_FILE = "/sdcard/tempRecorded.wav";
-    MediaRecorder recorder;
-
-    private Timer mTimer;
-    private TimerTask mTask;
-
-
     /* View */
-    private RecyclerView recyclerView;              // 리사이클러 뷰
-    private RecyclerAdapter recyclerAdapter;        // 리사이클러 뷰 어댑터
+    private RecyclerView recyclerView;                 // 리사이클러 뷰
+    private RecyclerAdapter recyclerAdapter;           // 리사이클러 뷰 어댑터
     private TextView CrytxtTime;                       // 진행 시간 표시 뷰
-
 
     /* 생성자 */
     public CryFragment() { }
@@ -106,39 +96,6 @@ private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder>
         holder.whenCryText.setText(curData.getWhenCry());
         holder.howCryText.setText(curData.getHowCry());
 
-//FIXME!
-//                            /* 이미지 아이콘 및 상태 변화 클릭하면 데이터를 밑에 나열해야함. */
-//        holder.imgvPlay.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                /* TODO : 여기서 각 뷰의 플레이 버튼을 눌렀을 때 동작해야 하는 것을 적는다. */
-//                if (!listData.get(position).getListening()) {
-//                    /* 현재 리스닝 중이 아님 -> 리스닝 시작 */
-//
-////                            holder.imgvPlay.setImageDrawable(getResources().getDrawable(R.drawable.play_on));
-////                            holder.imgvWave.setImageDrawable(getResources().getDrawable(R.drawable.soundwave_on));
-////                            listData.get(position).setListening(true);
-//
-//                    /* 리스닝 코드 */
-//
-//
-//                } else {
-//                    /* 현재 리스닝 중임 -> 리스닝 중단 */
-////FIXME!
-////                            /* 이미지 아이콘 변화 */
-////                            holder.imgvPlay.setImageDrawable(getResources().getDrawable(R.drawable.play_off));
-////                            holder.imgvWave.setImageDrawable(getResources().getDrawable(R.drawable.soundwave_off));
-////                            listData.get(position).setListening(false);
-//
-//                    /* 리스닝 중단 코드 */
-//
-//
-//                }
-//
-//            }
-//        });
-
     }
 
 
@@ -149,29 +106,18 @@ private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder>
 
 }
 
-private class ItemViewHolder extends RecyclerView.ViewHolder {
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView whenCryText;
-    private TextView howCryText;
+        private TextView whenCryText;
+        private TextView howCryText;
 
-    public ItemViewHolder(@NonNull View itemView) {
-        super(itemView);
+        public ItemViewHolder(@NonNull View itemView) {
+            super(itemView);
 
-        whenCryText = itemView.findViewById(R.id.CryFragmentAdapter_TextView_whenCry);
-        howCryText = itemView.findViewById(R.id.CryFragmentAdapter_TextView_howCry);
-    }
-
-}
-    public void onPause() {
-        if(recorder != null){
-            recorder.release();
-            recorder = null;
+            whenCryText = itemView.findViewById(R.id.CryFragmentAdapter_TextView_whenCry);
+            howCryText = itemView.findViewById(R.id.CryFragmentAdapter_TextView_howCry);
         }
-        super.onPause();
+
     }
 
-    public void onResume(){
-        super.onResume();
-        recorder = new MediaRecorder();
-    }
 }
