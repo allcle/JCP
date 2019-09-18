@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
     public void setViewPager(ViewPager viewPager){
 
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new SttFragment(), "음성번역");
-        adapter.addFragment(new DangerFragment(), "위험감지");
-        adapter.addFragment(new CryFragment(), "울음소리");
+        adapter.addFragment(new SttFragment(), "음성 번역");
+        adapter.addFragment(new DangerFragment(), "생활 알림");
+        adapter.addFragment(new CryFragment(), "아이 케어");
         viewPager.setAdapter(adapter);
 
     }
