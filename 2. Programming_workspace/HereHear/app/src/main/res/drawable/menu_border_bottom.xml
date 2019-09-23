@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--    <item android:top="5dp"/>-->
+
+<!--    <border>-->
+<!--        <stroke android:color="@color/shadow"-->
+<!--            android:width="5dp" ></stroke>\-->
+<!--    -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape android:shape="rectangle">
+        <solid android:color="@color/shadow" />
+    </shape>
+</item>
+<!--    밥그릇 뒤 배경-->
+
+
+        <item android:top="-10dp" android:right="0dp" android:left="0dp" android:bottom="3dp"
+
+           >
+                                                                                                                                                                                                             >
+
+
+            <shape android:shape="rectangle"  android:elevation="5dp">
+                <solid android:color="@color/background" />
+                <corners
+                    android:bottomLeftRadius="20dp"
+                    android:bottomRightRadius="20dp"/>
+                <padding
+                    android:left="10dp"
+                    android:right="10dp"
+                    android:top="10dp"
+                    android:bottom="10dp"/>
+                <margin
+                    android:left="0dp"
+                    android:right="0dp"
+                    android:top="0dp"
+                    />
+                <stroke android:width="2dp"
+                    android:color="@color/shadow"/>
+            </shape>
+        </item>
+<!--    <item android:name="android:windowContentOverlay">20dp</item>-->
+<!--    <item android:name="android:windowContentOverlay">20dp</item>-->
+    </layer-list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    &lt;!&ndash;배경색&ndash;&gt;-->
+<!--    <solid android:color="@color/background"/>-->
+
+
+
+
+
