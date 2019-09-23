@@ -7,11 +7,15 @@
 <!--        <stroke android:color="@color/shadow"-->
 <!--            android:width="5dp" ></stroke>\-->
 <!--    -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape android:shape="rectangle">
+        <solid android:color="@color/shadow" />
+    </shape>
+</item>
+<!--    밥그릇 뒤 배경-->
 
 
-
-
-    <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
         <item android:top="-10dp" android:right="1dp" android:left="2dp" android:bottom="3dp">
             <shape android:shape="rectangle">
                 <solid android:color="@color/background" />
@@ -29,7 +33,7 @@
                     android:top="0dp"
                     />
                 <stroke android:width="2dp"
-                    android:color="@color/RecyclerView_border"/>
+                    android:color="@color/shadow"/>
             </shape>
         </item>
     </layer-list>
