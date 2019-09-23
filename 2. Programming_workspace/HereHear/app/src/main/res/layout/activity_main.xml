@@ -50,19 +50,18 @@
                 <com.google.android.material.tabs.TabLayout
                     android:elevation="0dp"
                     app:elevation="0dp"
-
                     android:id="@+id/MainActivity_TabLayout_tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/tabHeight"
                     android:background="@color/background"
                     app:tabBackground="@drawable/tab_selector"
                     app:tabGravity="fill"
-                    app:tabIndicatorColor="#ffffff"
+                    app:tabIndicatorColor="@color/shadow"
                     app:tabIndicatorHeight="3dp"
                     app:tabMode="fixed"
                     app:tabSelectedTextColor="@color/colorPrimary"
                     app:tabTextColor="@color/SttFragment_dictate" />
-
+<!--                app:tabIndicatorColor="@color/shadow" 스토커 탭-->
             </com.google.android.material.appbar.AppBarLayout>
 
         </RelativeLayout>
