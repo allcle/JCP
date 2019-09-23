@@ -29,7 +29,7 @@
             <!--            밑에 바 -->
 
             <androidx.viewpager.widget.ViewPager
-                android:elevation="6dp"
+                android:elevation="4dp"
                 android:id="@+id/MainActivity_ViewPager_viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
