@@ -1,22 +1,26 @@
 package com.jcp.herehear.Activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.media.Image;
-import android.os.Bundle;
-import android.widget.ImageView;
-
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.jcp.herehear.Fragment.CryFragment;
 import com.jcp.herehear.Fragment.DangerFragment;
-import com.jcp.herehear.R;
 import com.jcp.herehear.Fragment.SttFragment;
+import com.jcp.herehear.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private final int TAB_DICTATE = 0;
     private final int TAB_DANGER = 1;
     private final int TAB_CRY = 2;
+    //private final int MY_PERMISSIONS_REQUEST_CAMERA = 1001;
 
     /* 탭 메뉴 파일 정의 */
     private int tabImg[][] = {
@@ -78,16 +83,60 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* Permission Check */
+        int record_permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        int write_permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        ArrayList<String> permissions = new ArrayList<String>();
+        if (write_permissionCheck == PackageManager.PERMISSION_DENIED)
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (record_permissionCheck== PackageManager.PERMISSION_DENIED)
+            permissions.add(Manifest.permission.RECORD_AUDIO);
+
+        if(permissions.size()>0){
+            String[] reqPermissionArray = new String[permissions.size()];
+            reqPermissionArray = permissions.toArray(reqPermissionArray);
+            ActivityCompat.requestPermissions(this, reqPermissionArray, 1);
+        }
+
+        /*
+        if (write_permissionCheck == PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        if (record_permissionCheck== PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 2);
+*/
+
+
         /* ViewPager 및 TabLayout 세팅 */
         mAppLayout = findViewById(R.id.MainActivity_AppBarLayout_barLayout);
         mViewPager = findViewById(R.id.MainActivity_ViewPager_viewPager);
         mTabLayout = findViewById(R.id.MainActivity_TabLayout_tabLayout);
         setViewPager(mViewPager, mTabLayout);
-
     }
 
+    public void onRequestPermissionResult(int requestCode,
+                                          String permissions[], int[] grantResults){
+        switch(requestCode){
+            case 1:{
+                if(grantResults.length==2){
+                    Toast.makeText(this, "필요한 승인이 모두 허가되었습니다.", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED
+                            && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+                        Toast.makeText(this, "두 가지 승인이 모두 허가되지 않았습니다.", Toast.LENGTH_LONG).show();
+                    else if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+                        Toast.makeText(this, "Record Audio 승인이 허가 되었습니다. 저장 승인을 필요로합니다.", Toast.LENGTH_LONG).show();
+                    else if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                        Toast.makeText(this, "저장 승인이 허가 되었습니다. Record Audio 승인을 필요로합니다.", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
 
     /*
+
 
         ViewPager 의 초기 세팅을 한다.
         페이지 어댑터를 생성하고 Fragment 들을 등록한 뒤

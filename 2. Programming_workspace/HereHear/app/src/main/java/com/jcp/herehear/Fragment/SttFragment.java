@@ -1,18 +1,8 @@
 package com.jcp.herehear.Fragment;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -21,7 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.jcp.herehear.R;
 
@@ -93,6 +84,7 @@ public class SttFragment extends Fragment {
     private void setSpeechPermission() {
 
         /* 권한 체크부터 하고 권한이 허용되어 있지 않으면 설정으로 넘어간다. */
+        /*
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
 
             if(!(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO)
@@ -108,6 +100,7 @@ public class SttFragment extends Fragment {
             }
 
         }
+         */
 
     }
 
