@@ -9,46 +9,62 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        >
+        <!--         탑바-->
         <ImageView
             android:id="@+id/MainActivity_ImageView_topBar"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:background="#3ebaab"
-
+            android:elevation="4dp"
             android:src="@drawable/icon_title_background" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!--       android:background="@color/background"          -->
+
+            <!--            밑에 바 -->
+
             <androidx.viewpager.widget.ViewPager
+                android:elevation="4dp"
                 android:id="@+id/MainActivity_ViewPager_viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignTop="@+id/MainActivity_AppBarLayout_barLayout"
-                android:layout_alignParentTop="true"/>
-
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="100dp"
+                android:layout_marginTop="-2dp"
+                android:background="@color/background" />
 
             <com.google.android.material.appbar.AppBarLayout
+
                 android:id="@+id/MainActivity_AppBarLayout_barLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
+                android:layout_alignParentBottom="true"
 
+                >
+
+                <!--                android:elevation="0dp"는 쉐도우 없애기 고민중입니다.-->
+                <!--                FIXME!-->
                 <com.google.android.material.tabs.TabLayout
+
                     android:id="@+id/MainActivity_TabLayout_tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/tabHeight"
-                    android:background="@color/colorPrimary"
-                    app:tabMode="fixed"
-                    app:tabGravity="fill"
-                    app:tabTextColor="@android:color/darker_gray"
-                    app:tabSelectedTextColor="@android:color/black"
-                    app:tabIndicatorColor="#ffffff"
-                    app:tabIndicatorHeight="3dp"/>
+                    android:background="@color/background"
 
+                    app:tabBackground="@drawable/tab_selector"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/shadow"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/colorPrimary"
+                    app:tabTextColor="@color/SttFragment_dictate" />
+                <!--                app:tabIndicatorColor="@color/shadow" 스토커 탭-->
             </com.google.android.material.appbar.AppBarLayout>
 
         </RelativeLayout>
