@@ -9,46 +9,72 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        >
+        <!--         탑바-->
         <ImageView
             android:id="@+id/MainActivity_ImageView_topBar"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:background="#3ebaab"
-
+            android:elevation="4dp"
             android:src="@drawable/icon_title_background" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!--       android:background="@color/background"          -->
+
+            <!--            밑에 바 -->
+
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/MainActivity_ViewPager_viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignTop="@+id/MainActivity_AppBarLayout_barLayout"
-                android:layout_alignParentTop="true"/>
-
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="100dp"
+                android:layout_marginTop="-2dp"
+                android:background="@color/background" />
 
             <com.google.android.material.appbar.AppBarLayout
+
                 android:id="@+id/MainActivity_AppBarLayout_barLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
+                android:layout_alignParentBottom="true"
 
+                >
+
+                <!--                android:elevation="0dp"는 쉐도우 없애기 고민중입니다.-->
+                <!--                FIXME!-->
+                <!-- RippleColor : 선택 시 잔상 색, 일단 투명하게, 바꾸셔도됩니다 -->
                 <com.google.android.material.tabs.TabLayout
+
                     android:id="@+id/MainActivity_TabLayout_tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/tabHeight"
-                    android:background="@color/colorPrimary"
-                    app:tabMode="fixed"
-                    app:tabGravity="fill"
-                    app:tabTextColor="@android:color/darker_gray"
-                    app:tabSelectedTextColor="@android:color/black"
-                    app:tabIndicatorColor="#ffffff"
-                    app:tabIndicatorHeight="3dp"/>
+                    android:background="#ffffff"
 
+                    app:tabPaddingBottom="2dp"
+                    app:tabPaddingEnd="-1dp"
+                    app:tabPaddingStart="-1dp"
+                    app:tabPaddingTop="-1dp"
+
+
+                    app:tabIndicatorColor="@color/shadow"
+                    app:tabIndicatorHeight="3dp"
+
+
+                    app:tabRippleColor="#00000000"
+
+                    app:tabGravity="fill"
+                    app:tabMode="fixed"
+
+                    />
+
+                <!--                app:tabIndicatorColor="@color/shadow" 스토커 탭-->
             </com.google.android.material.appbar.AppBarLayout>
 
         </RelativeLayout>

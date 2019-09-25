@@ -4,10 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.media.Image;
 import android.os.Bundle;
+import android.widget.ImageView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.jcp.herehear.Fragment.CryFragment;
 import com.jcp.herehear.Fragment.DangerFragment;
@@ -31,28 +35,34 @@ public class MainActivity extends AppCompatActivity {
 
     /* 멤버변수 */
     private ViewPager mViewPager;           // 뷰 페이저
+    private AppBarLayout mAppLayout;        // App 바 레이아웃
     private TabLayout mTabLayout;           // 탭 레이아웃
+    private ImageView imgStt;               // 번역하기 탭 이미지뷰
+    private ImageView imgDanger;            // 위험소리 탭 이미지뷰
+    private ImageView imgCry;               // 울음소리 탭 이미지뷰
 
     /* 탭 번호 정의 - 0.번역, 1.위험소리, 2.울음소리 */
     private final int TAB_DICTATE = 0;
     private final int TAB_DANGER = 1;
     private final int TAB_CRY = 2;
 
-    /* 탭 아이콘 파일 정의 */
-    private int tabIcons[] = {
-            R.drawable.icon_dictate,
-            R.drawable.icon_danger,
-            R.drawable.icon_cry
-    };
+    /* 탭 메뉴 파일 정의 */
+    private int tabImg[][] = {
 
-    /* 탭 아이콘-비선택 파일 정의 */
-    private final int tabIcons_unSelected[] = {
             /*
 
-                선택되지 않았을 때 아이콘의 파일 기록할 것.
-                ex:) 불투명한 버전 아이콘
+                2차원 배열의 첫번째 인덱스는 현재 결정해주어야 할 탭의 인덱스
+                2차원 배열의 두번째 인덱스는 현재 선택된 탭의 인덱스
+
+                ex:) cry fragment 가 선택된 상태에서 stt 탭의 이미지
+                tabImg[TAB_DICTATE][TAB_CRY];
+                tabImg[결정해야할 탭][현재 선택된 탭]
 
             */
+
+            {R.drawable.tab_stt_selected_stt, R.drawable.tab_stt_selected_danger, R.drawable.tab_stt_selected_cry},
+            {R.drawable.tab_danger_selected_stt, R.drawable.tab_danger_selected_danger, R.drawable.tab_danger_selected_cry},
+            {R.drawable.tab_cry_selected_stt, R.drawable.tab_cry_selected_danger, R.drawable.tab_cry_selected_cry}
     };
 
 
@@ -69,43 +79,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /* ViewPager 및 TabLayout 세팅 */
+        mAppLayout = findViewById(R.id.MainActivity_AppBarLayout_barLayout);
         mViewPager = findViewById(R.id.MainActivity_ViewPager_viewPager);
         mTabLayout = findViewById(R.id.MainActivity_TabLayout_tabLayout);
-        setViewPager(mViewPager);
-        setTabLayout(mTabLayout, mViewPager);
-
-    }
-
-    /*
-
-        TabLayout과 ViewPager를 연동하고
-        탭 레이아웃의 세팅(아이콘, 탭 선택/비선택 시 동작)
-
-    */
-    private void setTabLayout(TabLayout tabLayout, ViewPager viewPager) {
-
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(TAB_DICTATE).setIcon(tabIcons[TAB_DICTATE]);
-        tabLayout.getTabAt(TAB_DANGER).setIcon(tabIcons[TAB_DANGER]);
-        tabLayout.getTabAt(TAB_CRY).setIcon(tabIcons[TAB_CRY]);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                /* 현재 탭이 선택 되었을 때 */
-                int pos = tab.getPosition();
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                /* 현재 탭이 비선택 되었을 때 */
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                /* 현재 탭이 다시 선택 되었을 때 */
-            }
-        });
+        setViewPager(mViewPager, mTabLayout);
 
     }
 
@@ -117,13 +94,68 @@ public class MainActivity extends AppCompatActivity {
         ViewPager 에 페이지 어댑터를 장착
 
     */
-    public void setViewPager(ViewPager viewPager){
+    public void setViewPager(final ViewPager viewPager, final TabLayout tabLayout) {
 
-        MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new SttFragment(), "음성번역");
-        adapter.addFragment(new DangerFragment(), "위험감지");
-        adapter.addFragment(new CryFragment(), "울음소리");
+        final MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager());
+        adapter.addFragment(new SttFragment(), "음성 번역");
+        adapter.addFragment(new DangerFragment(), "생활 알림");
+        adapter.addFragment(new CryFragment(), "아이 케어");
         viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabCustomView(tabLayout, adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int selectedIdx) {
+
+                /*
+                    각 페이지가 선택될 때 마다 이벤트를 정의한다.
+
+                    탭의 이미지를 갱신함.
+
+                */
+
+                int pageSize = adapter.getCount();
+                for (int currentIdx = 0; currentIdx < pageSize; currentIdx++) {
+                    TabLayout.Tab tab = tabLayout.getTabAt(currentIdx);
+                    ImageView tpImg = (ImageView) tab.getCustomView();
+                    tpImg.setImageResource(
+                            tabImg[currentIdx][selectedIdx]
+                    );
+                    tab.setCustomView(tpImg);
+
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+    }
+
+    /* 각 탭 뷰의 커스텀뷰를 셋업 */
+    private void setupTabCustomView(TabLayout tabLayout, PagerAdapter adapter) {
+
+        mAppLayout.setExpanded(true, true);
+        int pageSize = adapter.getCount();
+        for (int currentIdx = 0; currentIdx < pageSize; currentIdx++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(currentIdx);
+            ImageView tpImg = new ImageView(this);
+            /* 이미지 가로 스케일 맞춘다 */
+            tpImg.setScaleType(ImageView.ScaleType.FIT_XY);
+            tpImg.setImageResource(
+                    tabImg[currentIdx][TAB_DICTATE]
+            );
+            tab.setCustomView(tpImg);
+        }
 
     }
 
@@ -133,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         프래그먼트 페이지 어댑터 - 내부클래스로 구현
 
     */
-    private class MainPageAdapter extends FragmentPagerAdapter{
+    private class MainPageAdapter extends FragmentPagerAdapter {
 
         /* 멤버변수 */
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -145,14 +177,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /* ViewPager에 새로운 Fragment를 추가한다. */
-        public void addFragment(Fragment fragment, String title){
+        public void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
 
         /* position에 해당하는 Fragment의 title을 반환하다. */
-        public String getPageTitle(int position){
-            return mFragmentTitleList.get(position);
+        public String getPageTitle(int position) {
+            return "";
+//            return mFragmentTitleList.get(position);
         }
 
         /* position에 해당하는 Fragment를 반환한다. */

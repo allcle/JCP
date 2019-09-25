@@ -59,6 +59,16 @@ README.md 는 기호에 맞게 수정하셔도 됩니다.
 
 
 
+##### 19.09.25.근화 190925 18:56 MainActivity 및 fragment_main - 변경사항 및 이슈
+
+- 재은님 코드 Merge (TabLayout, 실행아이콘, background color 등)
+- MainActivity TabLayout 구조 변경 --> TabLayout 의 select 리스너 삭제
+- pageChange 리스너 추가, 각 Tab에 리스너를 없애고 페이지 전체가 선택된 탭이 바뀌었을 때 3가지의 탭바를 동시에 수정
+- 탭바 이미지 적용 --> **TODO : 이미지 가로 비율이 안맞음, 안드로이드 화면 비율에 절대값을 맞출 필요는 없으나(스케일 가능) 각 9가지 이미지의 가로, 세로사이즈는 동일해야 함.**
+- Selector 관련 @drawable 삭제, selector 에 png 삽입으로 구현 가능하나 9가지의 케이스를 탭바마다 따로 구현할 수는 없는 방식이었습니다.
+
+
+
 ---
 
 ###### TODO List
