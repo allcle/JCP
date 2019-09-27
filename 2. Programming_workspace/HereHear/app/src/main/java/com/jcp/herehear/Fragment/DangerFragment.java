@@ -3,19 +3,8 @@ package com.jcp.herehear.Fragment;
 import android.content.ContentValues;
 import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
-
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -24,6 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jcp.herehear.Class.DangerData;
 import com.jcp.herehear.R;
@@ -32,11 +30,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import pl.droidsonroids.gif.GifAnimationMetaData;
 import pl.droidsonroids.gif.GifImageView;
+
+import static java.lang.Math.log10;
 
 public class DangerFragment extends Fragment {
 
@@ -112,9 +108,12 @@ public class DangerFragment extends Fragment {
                         public void run() {
                             Log.d("msg", "4초 경과! 4초마다 수행되야 정상.");
                             // 4초마다 반복할 업무를 여기에 지정
+                            // ★★★ ToDoList 데시벨 저장
+                            final double powerDb = 20 * log10 (recorder.getMaxAmplitude());
+                            Log.d("powerDb : ", String.valueOf(powerDb));
                             endRecoding(); // 파일 저장 전에, 기존 파일 여부 확인 후 삭제
 
-                            // ★★★ ToDoList4
+                            // ★★★ ToDoList
                             // 장고연결과 startRecodinig은 Thread하고자 하는데, 현재는 절차식으로 구동되는 듯.
                             // Thread로 구현해야 정상적으로 4초 단위 wav파일이 생성된다.
                             new Thread(new Runnable() {
@@ -123,7 +122,14 @@ public class DangerFragment extends Fragment {
                                 public void run() {
                                     // 장고와 연결하여 temp wav 전달, return값에 따라 UI에 표시
                                     Log.d("Msg", "sendDjango, startRecording Thread 동작");
-                                    danger.sendDjango();
+                                    // ★★★ ToDoList 저장한 wav 파일에서 maximum 데시벨이 가이드라인보다 높은 경우 sendDjano. 데시벨은 몇이 적당?
+                                    if(powerDb>80.0){
+                                        Log.d("msg : ", "powerDb가 80을 초과했습니다.");
+                                        danger.sendDjango();
+                                    }
+                                    else{
+                                        Log.d("msg : ", "powerDb가 80을 초과하지 못했습니다.");
+                                    }
                                     startRecoding();
                                 }
                             }).start();
@@ -214,24 +220,6 @@ public class DangerFragment extends Fragment {
 
                 Log.d("msg", "@@@@ recordBtn의 endRecoding에서 values 저장 완료!");
                 Log.d("msg-values : ", String.valueOf(values));
-
-                // ToDoList1. audioUri = null로 되어있다. 해결해야하는 문제.
-                // 현재 설정한 저장위치는 _data=/sdcard/tempRecorded.wav ( = RECORD_FILE)
-                // 밑의 sendDjango와 경로 맞춰줘야한다.
-                // HereHear앱에서 "파일"앱의 데이터베이스에 접근하기 위한 기능인듯?
-                // 근데 현재 실질적으로 사용되지 않는다. Django에 보내기 위한 파일을 sdcard에 직접접근하기 때문. 고로 해당 코드는 잠시 주석처리한다.
-                // 해당 ContentResolve 코드는 Django와의 통신이 마무리되면 삭제해도 무방하다.
-                /*
-                Uri audioUri = getContext().getContentResolver().insert(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        values
-                );
-                Log.d("msg", "@@@@ recordBtn의 endRecoding에서 values의 uri 지정 완료!");
-                Log.d("msg-audioUri : ", String.valueOf(audioUri));
-                if(audioUri == null){
-                    Log.d("SampleAudioRecorder", "Audio insert failed.");
-                    return;
-                }*/
             }
 
         });
