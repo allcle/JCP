@@ -1,2 +1,3 @@
 env/
-classifier/*
+classifier/*.h5
+.vscode/
