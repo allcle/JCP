@@ -5,8 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -27,14 +25,11 @@ import com.jcp.herehear.Class.DangerData;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.R;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
-
-import static java.lang.Math.log10;
 
 public class DangerFragment extends Fragment implements TimeHandler.TimeHandleResponse {
 
@@ -114,6 +109,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                         public void run() {
                             Log.d("msg", "4초 경과! 4초마다 수행되야 정상.");
 
+                            // ToDoList 데시벨 측정 정상적인지 확인
                             // 데시벨 측정 코드. 특정 데시벨을 초과하는 경우에만 sendDjango()를 호출하도록 구현할 수 있다.
                             // 일반적인 상황에서는 데시벨 100이 적당한 트리거인데 지금은 모바일에서 출력되는 소리로 실험하므노 60, 70쯤이 적당
                             if(20 * Math.log10((double)Math.abs(recorder.getMaxAmplitude()))>60.0){
@@ -209,8 +205,6 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                 //mTimer.cancel(); // mTimer을 여기서 중단시키는 코드가 원래 있었는데, 논리 상 안맞고 타이머가 중단되므로 주석처리한 상황
 
                 // 이부분이 values를 저장하는 부분.
-                // ★ ToDoList
-                // 기존 파일이 있는지 여부 먼저 파악 후, 있으면 삭제하기 기능을 구현하길 요망한다.
                 values.put(MediaStore.MediaColumns.TITLE, "JCP");
                 values.put(MediaStore.Audio.Media.ALBUM, "tempRecorded");
                 values.put(MediaStore.Audio.Media.ARTIST, "HereHear");
