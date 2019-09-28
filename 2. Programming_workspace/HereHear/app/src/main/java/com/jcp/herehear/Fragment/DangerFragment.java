@@ -105,28 +105,24 @@ public class DangerFragment extends Fragment {
                     mTask = new TimerTask() {
                         public void run() {
                             Log.d("msg", "4초 경과! 4초마다 수행되야 정상.");
-                            // 4초마다 반복할 업무를 여기에 지정
-                            endRecoding(); // 파일 저장 전에, 기존 파일 여부 확인 후 삭제
 
-                            // ★★★ ToDoList
-                            // 장고연결과 startRecodinig은 Thread하고자 하는데, 현재는 절차식으로 구동되는 듯.
-                            // Thread로 구현해야 정상적으로 4초 단위 wav파일이 생성된다.
+                            // 데시벨 측정 코드. 특정 데시벨을 초과하는 경우에만 sendDjango()를 호출하도록 구현할 수 있다.
+                            // 일반적인 상황에서는 데시벨 100이 적당한 트리거인데 지금은 모바일에서 출력되는 소리로 실험하므노 60, 70쯤이 적당
+                            if(20 * Math.log10((double)Math.abs(recorder.getMaxAmplitude()))>60.0){
+                                Log.d("msg : ", "powerDb가 60를초과했습니다.");
+                            }
+                            else{
+                                Log.d("msg : ", "powerDb가 60를 초과하지 못했습니다.");
+                            }
+                            endRecoding();
+                            // Thread로 sendDjango & startRecoding 동작
+                            Log.d("Msg", "sendDjango, startRecording Thread 동작");
                             new Thread(new Runnable() {
                                 @RequiresApi(api = Build.VERSION_CODES.O)
                                 @Override
                                 public void run() {
                                     // 장고와 연결하여 temp wav 전달, return값에 따라 UI에 표시
-                                    Log.d("Msg", "sendDjango, startRecording Thread 동작");
                                     danger.sendDjango();
-
-                                    // 데시벨 측정 코드. 특정 데시벨을 초과하는 경우에만 sendDjango()를 호출하도록 구현할 수 있다.
-                                    // 일반적인 상황에서는 데시벨 100이 적당한 트리거인데 지금은 모바일에서 출력되는 소리로 실험하므노 60, 70쯤이 적당
-                                    if(20 * Math.log10((double)Math.abs(recorder.getMaxAmplitude()))>60.0){
-                                        Log.d("msg : ", "powerDb가 60를초과했습니다.");
-                                    }
-                                    else{
-                                        Log.d("msg : ", "powerDb가 60를 초과하지 못했습니다.");
-                                    }
                                     startRecoding();
                                 }
                             }).start();
@@ -161,6 +157,7 @@ public class DangerFragment extends Fragment {
                     ContentValues values = new ContentValues(10);
                     mTimer.cancel();
 
+                    // ToDoList 여기서 저장된 tempRecording.wav 삭제 구현할까?
                 }
             }
             public void startRecoding() {
