@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         if (record_permissionCheck== PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 2);
-*/
+        */
 
 
         /* ViewPager 및 TabLayout 세팅 */
@@ -234,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
         /* position에 해당하는 Fragment의 title을 반환하다. */
         public String getPageTitle(int position) {
             return "";
-//            return mFragmentTitleList.get(position);
         }
 
         /* position에 해당하는 Fragment를 반환한다. */

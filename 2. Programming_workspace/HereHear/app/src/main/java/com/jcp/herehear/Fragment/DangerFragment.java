@@ -24,15 +24,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jcp.herehear.Class.DangerData;
+import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.R;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
 
-public class DangerFragment extends Fragment {
+import static java.lang.Math.log10;
+
+public class DangerFragment extends Fragment implements TimeHandler.TimeHandleResponse {
 
     // sendToDjango에서 찾는 경로 : /storage/emulated/0/Recorded/audio.wav
     final private static String RECORD_FILE = "/sdcard/tempRecorded.wav";
@@ -56,14 +60,18 @@ public class DangerFragment extends Fragment {
 
     }
 
-    Handler myTimer = new Handler(){
-        public void handleMessage(Message msg){
-            txtTime.setText(getTimeOut());
+    /* Time Handler - 타이머 클래스 */
+    private final TimeHandler myTimer = new TimeHandler(this);
 
-            //sendEmptyMessage 는 비어있는 메세지를 Handler 에게 전송하는겁니다.
-            myTimer.sendEmptyMessage(0);
-        }
-    };
+    /* 타임 핸들러에 대한 콜백 UI 처리 */
+    @Override
+    public void processUI() {
+        long now = SystemClock.elapsedRealtime();
+        long outTime = now - baseTime;
+        String elapsedTime = String.format("%02d:%02d:%02d", outTime/1000 / 60, (outTime/1000)%60,(outTime%1000)/10);
+        txtTime.setText(elapsedTime);
+        myTimer.sendEmptyMessage(0);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -220,13 +228,6 @@ public class DangerFragment extends Fragment {
 
         });
         return view;
-    }
-
-    String getTimeOut(){
-        long now = SystemClock.elapsedRealtime();
-        long outTime = now - baseTime;
-        String easy_outTime = String.format("%02d:%02d:%02d", outTime/1000 / 60, (outTime/1000)%60,(outTime%1000)/10);
-        return easy_outTime;
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder>{
