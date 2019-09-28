@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5c96e92-0fa3-4315-b304-a84906611c6a" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="b5c96e92-0fa3-4315-b304-a84906611c6a" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="109" lean-forward="true" selection-start-line="109" selection-end-line="109" />
+            <state relative-caret-position="43">
+              <caret line="99" column="14" selection-start-line="99" selection-start-column="14" selection-end-line="99" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -44,7 +39,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="259" />
     <option name="y" value="69" />
     <option name="width" value="974" />
@@ -126,15 +121,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1561811699734</updated>
-      <workItem from="1569702365014" duration="117000" />
+      <workItem from="1569702365014" duration="358000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="117000" />
+    <option name="totallyTimeSpent" value="358000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="259" y="69" width="974" height="917" extended-state="0" />
+    <frame x="259" y="69" width="974" height="917" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19146608" />
@@ -168,8 +163,8 @@
     <entry file="file://$PROJECT_DIR$/main.py" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="109" lean-forward="true" selection-start-line="109" selection-end-line="109" />
+        <state relative-caret-position="43">
+          <caret line="99" column="14" selection-start-line="99" selection-start-column="14" selection-end-line="99" selection-end-column="14" />
         </state>
       </provider>
     </entry>
