@@ -32,8 +32,6 @@ import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
 
-import static java.lang.Math.log10;
-
 public class DangerFragment extends Fragment {
 
     // sendToDjango에서 찾는 경로 : /storage/emulated/0/Recorded/audio.wav
@@ -108,9 +106,6 @@ public class DangerFragment extends Fragment {
                         public void run() {
                             Log.d("msg", "4초 경과! 4초마다 수행되야 정상.");
                             // 4초마다 반복할 업무를 여기에 지정
-                            // ★★★ ToDoList 데시벨 저장
-                            final double powerDb = 20 * log10 (recorder.getMaxAmplitude());
-                            Log.d("powerDb : ", String.valueOf(powerDb));
                             endRecoding(); // 파일 저장 전에, 기존 파일 여부 확인 후 삭제
 
                             // ★★★ ToDoList
@@ -122,13 +117,15 @@ public class DangerFragment extends Fragment {
                                 public void run() {
                                     // 장고와 연결하여 temp wav 전달, return값에 따라 UI에 표시
                                     Log.d("Msg", "sendDjango, startRecording Thread 동작");
-                                    // ★★★ ToDoList 저장한 wav 파일에서 maximum 데시벨이 가이드라인보다 높은 경우 sendDjano. 데시벨은 몇이 적당?
-                                    if(powerDb>80.0){
-                                        Log.d("msg : ", "powerDb가 80을 초과했습니다.");
-                                        danger.sendDjango();
+                                    danger.sendDjango();
+
+                                    // 데시벨 측정 코드. 특정 데시벨을 초과하는 경우에만 sendDjango()를 호출하도록 구현할 수 있다.
+                                    // 일반적인 상황에서는 데시벨 100이 적당한 트리거인데 지금은 모바일에서 출력되는 소리로 실험하므노 60, 70쯤이 적당
+                                    if(20 * Math.log10((double)Math.abs(recorder.getMaxAmplitude()))>60.0){
+                                        Log.d("msg : ", "powerDb가 60를초과했습니다.");
                                     }
                                     else{
-                                        Log.d("msg : ", "powerDb가 80을 초과하지 못했습니다.");
+                                        Log.d("msg : ", "powerDb가 60를 초과하지 못했습니다.");
                                     }
                                     startRecoding();
                                 }
@@ -182,8 +179,10 @@ public class DangerFragment extends Fragment {
                 // 새 recorder 동작.
                 recorder = new MediaRecorder();
                 recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+                //recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                //recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                 recorder.setOutputFile(RECORD_FILE);
 
                 Log.d("msg", "#### recordBtn의 startRecoding에서 새로운 recorder 설정 완료.");
