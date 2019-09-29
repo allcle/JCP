@@ -25,7 +25,8 @@ SECRET_KEY = ')@tpj287h=!-i9+&9lps)t555kh(j2qgro9sv*)w2j!&z&2*4w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# To debug 허용된 호스트 - 안드로이드 가상환경에서는 localhost 를 10.0.2.2 로 접근한다.
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost']
 
 
 # Application definition
@@ -119,3 +120,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 각 media 파일에 대한 URL Prefix
+MEDIA_URL = '/media/' # 항상 / 로 끝나도록 설정
+# MEDIA_URL = 'http://static.myservice.com/media/' 다른 서버로 media 파일 복사시
+
+# 업로드된 파일을 저장할 디렉토리 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

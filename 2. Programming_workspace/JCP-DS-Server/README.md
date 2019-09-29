@@ -41,25 +41,65 @@ $ python manage.py runserver
 
 
 
-### API Usage
+## API Usage
 
-|     Request Type      |            Request Value            |
-| :-------------------: | :---------------------------------: |
-|       `Method`        |               `POST`                |
-|         `URL`         |  `http://SERVERURL:8000/uploads/`   |
-|      **HEADER**       |                                     |
-|    `Content-Type`     |             `audio/wav`             |
-| `Content-Disposition` | `attachment; filename=파일이름.wav` |
-|       **BODY**        |                                     |
-|        `File`         |       `음성 파일 업로드.wav`        |
-|   **Response BODY**   |         **Response Value**          |
-|       `result`        |        `소리 인덱스(0 ~ 5)`         |
-|        `sound`        |        `소리 분류( ** 소리)`        |
-
+|   Request Type    |          Request Value           |
+| :---------------: | :------------------------------: |
+|     `Method`      |              `POST`              |
+|       `URL`       | `http://SERVERURL:8000/uploads/` |
+|    **HEADER**     |                                  |
+|  `Content-Type`   |      `multipart/form-data`       |
+|     **BODY**      |                                  |
+|      `file`       |      `음성 파일 업로드.wav`      |
+| **Response BODY** |        **Response Value**        |
+|     `result`      |       `소리 인덱스(0 ~ 5)`       |
+|      `sound`      |      `소리 분류( ** 소리)`       |
 
 
 
+### Request Sample - cURL
 
-### Restlet Client - request sample
+```
+$ curl -X POST \
+  http://localhost:8000/uploads/ \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
+  -F file=@dog_bark35.wav
+  
+{ "result": 2, "sound": "드릴 소리" }
+```
+
+
+
+### Request Sample - HTTP
+
+```
+POST /uploads/ HTTP/1.1
+Content-Length: 300108
+Host: localhost:8000
+Content-Type: multipart/form-data;boundary=------FormBoundaryShouldDifferAtRuntime
+
+------FormBoundaryShouldDifferAtRuntime
+Content-Disposition: form-data; name="file"; filename="drilling3.wav"
+Content-Type: audio/wav
+
+[message-part-body; type: audio/wav, size: 299924 bytes]
+------FormBoundaryShouldDifferAtRuntime--
+
+HTTP/1.1 200 OK
+date: Sun, 29 Sep 2019 20:23:59 GMT
+allow: OPTIONS, POST
+server: WSGIServer/0.2 CPython/3.6.8
+x-frame-options: SAMEORIGIN
+content-length: 36
+vary: Accept, Cookie
+content-type: application/json
+
+{"result":2,"sound":"드릴 소리"}
+```
+
+
+
+###  Request sample - Restlet Client
 
 ### ![requestsample](./readme_request.png)
