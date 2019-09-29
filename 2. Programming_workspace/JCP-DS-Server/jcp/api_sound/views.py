@@ -1,7 +1,12 @@
 # Django_Rest_Framework
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, parser_classes
+
+import os
+from django.conf import settings
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 # Converting library
 from jcp.api_sound.soundparser import SoundParser
@@ -72,13 +77,20 @@ strSound = ["경적 소리", "개 짓는 소리", "드릴 소리", "총 소리",
 """
 
 @api_view(['POST'])
-@parser_classes((FileUploadParser,))
+# @parser_classes((FileUploadParser,))
+@parser_classes((MultiPartParser, FormParser,))
 def classifySound(request):
 
     ## 클라이언트에서 요청 바디의 파일을 받아온다
     f = request.data['file']
     file_name = f.name
     print("##### Requested sound data : " + file_name)
+    print(f)
+    print(type(f))
+
+    # path = default_storage.save('recorded.wav', ContentFile(f.read()))
+    # tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+    # print("file saved!")
 
     ## 음성 파일을 파싱하여 PIL 포맷 이미지로 받음
     pil_image = SoundParser.parseWavToPILImage(f, file_name)
