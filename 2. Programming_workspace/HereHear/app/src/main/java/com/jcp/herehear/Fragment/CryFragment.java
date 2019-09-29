@@ -275,6 +275,18 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
 
             holder.whenCryText.setText(curData.getWhenCry());
             holder.howCryText.setText(curData.getHowCry());
+            
+            if(curData.getListening()){//!!! FIXME!여기야 여기 버튼을 누르면 추가돼랏!
+                /* 듣는 중 */
+//                holder.imgvWave.setImageResource(R.drawable.voice_on_light);
+
+                CryData tmp3 = new CryData("오전 3:24", "80dB");
+                listData.add(tmp3);
+
+            }else{
+                /* 안 듣는 중 */
+//                holder.imgvWave.setImageResource(R.drawable.soundwave_off);
+            }
 
 
         }
