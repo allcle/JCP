@@ -103,6 +103,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
                     /* 진행시간 갱신 */
                     baseTime = SystemClock.elapsedRealtime();
+
                     timeHandler.sendEmptyMessage(0);
 
                     /* 레코딩 시작 */
@@ -111,6 +112,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                     wavRecorder.startRecording();
                     mTimer = new Timer();
                     mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
+                  
 
                     /* 예시 - 이런식으로 wav 이미지 변경한다. */
                     recyclerAdapter.listData.get(0).setListening(true);
