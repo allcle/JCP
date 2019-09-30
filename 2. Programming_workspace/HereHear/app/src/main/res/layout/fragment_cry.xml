@@ -20,13 +20,21 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/custom_border_top">
-
-            <pl.droidsonroids.gif.GifImageView
+            <!--
+                        <pl.droidsonroids.gif.GifImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_margin="10dp"
+                            android:background="@color/RecyclerView_border"
+                            android:src="@drawable/cry" />-->
+            <ImageView
+                android:id="@+id/CryFragmentAdapter_ImageView_soundPlay"
                 android:layout_width="70dp"
+
+
                 android:layout_height="70dp"
                 android:layout_margin="10dp"
-                android:background="@color/RecyclerView_border"
-                android:src="@drawable/cry" />
+                android:src="@drawable/cry_no" />
 
 
             <LinearLayout

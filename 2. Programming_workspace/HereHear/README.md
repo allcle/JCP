@@ -69,6 +69,15 @@ README.md 는 기호에 맞게 수정하셔도 됩니다.
 
 
 
+##### 19.09.30.근화 190930 02:20 WavRecorder, RecordingTask 리팩토링 및 wav 파일 http request 구현 - 변경사항 및 이슈
+
+- 재은님 코드 Merge 할 것.(cryfragment 실행 및 리스너 처리)
+- Recording task 전체적인 리팩토링, MediaRecorder 대신 WavRecorder 구현
+- OKHttp3 를 통한 .wav 파일 request 처리 (Multipart/form-data 형식)
+- Decibel 처리 관련 다시 코드를 짜야 할 것 같습니다..
+
+
+
 ---
 
 ###### TODO List
