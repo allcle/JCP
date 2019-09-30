@@ -1,11 +1,13 @@
 package com.jcp.herehear.Class;
 
 import android.media.AudioFormat;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -57,14 +59,9 @@ public class WavRecorder {
 
     }
 
-    public double getMaxAmplitude(){
+    public double getMaxAmplitude() {
 
         /* TODO : 이곳에 AudioRecord 클래스를 통해 데시벨 관련 함수 구현해야 함. */
-
-
-
-
-
 
 
         return 0.0;
@@ -163,7 +160,7 @@ public class WavRecorder {
             recordingThread = null;
         }
 
-        copyWaveFile(getTempFilename(), "/sdcard/"+AUDIO_RECORDER_FOLDER+"/"+getFilename());
+        copyWaveFile(getTempFilename(), "/sdcard/" + AUDIO_RECORDER_FOLDER + "/" + getFilename());
         deleteTempFile();
     }
 
