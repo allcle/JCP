@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jcp.herehear.Class.DangerData;
+import com.jcp.herehear.Class.HttpSoundRequest;
 import com.jcp.herehear.Class.RecordTask;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.Class.WavRecorder;
@@ -27,20 +28,20 @@ import java.util.Timer;
 
 import pl.droidsonroids.gif.GifImageView;
 
-public class DangerFragment extends Fragment implements TimeHandler.TimeHandleResponse {
+public class DangerFragment extends Fragment implements TimeHandler.TimeHandleResponse, HttpSoundRequest.AsyncResponse {
 
     // sendToDjango에서 찾는 경로 : /storage/emulated/0/Recorded/audio.wav
     private final String RECORD_FILE_NAME =
             "recorded.wav";                         // wav 파일 이름
     public final static String RECORD_FILE_DIR =
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
-//    public final static String RECORD_FILE_DIR =
+    //    public final static String RECORD_FILE_DIR =
 //            "/sdcard/tpRecorded";
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
 
     private Timer mTimer;
-    private RecordTask recordTask;
-    private WavRecorder wavRecorder;
+    private RecordTask recordTask;                  // 주기별로 녹음하고 요청처리하는 Task
+    private WavRecorder wavRecorder;                // .wav 포맷 레코더
 
     /* View */
     private RecyclerView recyclerView;              // 리사이클러 뷰
@@ -51,6 +52,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     /* Listening */
     private boolean isListening;                    // 현재 듣기 여부
     private long baseTime;                          // 경과 시간 체크를 위한 현재 시간 저장
+    private HttpSoundRequest.AsyncResponse delegate;// Callback 처리를 위한 delegate
 
     /* 생성자 */
     public DangerFragment() {
@@ -62,10 +64,10 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
     /* 타임 핸들러에 대한 콜백 UI 처리 */
     @Override
-    public void processUI() {
+    public void processTimerUI() {
         long now = SystemClock.elapsedRealtime();
         long outTime = now - baseTime;
-        String elapsedTime = String.format("%02d:%02d:%02d", outTime/1000 / 60, (outTime/1000)%60,(outTime%1000)/10);
+        String elapsedTime = String.format("%02d:%02d:%02d", outTime / 1000 / 60, (outTime / 1000) % 60, (outTime % 1000) / 10);
         txtTime.setText(elapsedTime);
         timeHandler.sendEmptyMessage(0);
     }
@@ -90,35 +92,33 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
         /* Wav 레코더 생성 */
         wavRecorder = new WavRecorder(RECORD_FILE_NAME);
+        delegate = this;
 
         /* Listening 통신 쪽 처리 */
         imgvPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isListening){
+                if (!isListening) {
                     /* 듣기 시작 */
-                    Log.d("Msg","startRecoding 동작! 1번만 수행되야 정상.");
+                    Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
                     isListening = true;
                     imgvPlay.setImageResource(R.drawable.sound_on);
 
                     /* 진행시간 갱신 */
                     baseTime = SystemClock.elapsedRealtime();
-
                     timeHandler.sendEmptyMessage(0);
 
                     /* 레코딩 시작 */
-                    recordTask = new RecordTask(wavRecorder);
+                    recordTask = new RecordTask(wavRecorder, delegate);
 //                    recordTask.startRecoding();
                     wavRecorder.startRecording();
                     mTimer = new Timer();
                     mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
-                  
 
-                    /* 예시 - 이런식으로 wav 이미지 변경한다. */
-                    recyclerAdapter.listData.get(0).setListening(true);
+                    recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(true);
                     recyclerAdapter.notifyDataSetChanged();
 
-                }else{
+                } else {
                     /* 듣기 종료 */
                     isListening = false;
                     imgvPlay.setImageResource(R.drawable.sound_off);
@@ -132,26 +132,26 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                     wavRecorder.stopRecording();
                     mTimer.cancel();
 
-                    /* 예시 - 이런식으로 wav 이미지 변경한다. */
-                    recyclerAdapter.listData.get(0).setListening(false);
+                    recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
+                    recyclerAdapter.preListeningIdx = 5;
                     recyclerAdapter.notifyDataSetChanged();
 
                 }
             }
 
-
         });
         return view;
     }
 
-    private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder>{
+    private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         /* 임시 데이터 */
         public ArrayList<DangerData> listData = new ArrayList<>();
+        public int preListeningIdx = 5;                                        // 가장 최근의 소리
 
         /* constructor - 임시 데이터 셋 생성 */
         /* 추후 리스트에 나타낼 데이터의 용도에 맞게 따로 커스터마이징 해서 설정해주어야 함 */
-        public RecyclerAdapter(){
+        public RecyclerAdapter() {
 
             /* 경적, 개, 드릴, 총, 사이렌, nothing - 예시로 생성 */
             Drawable icon_horn = getResources().getDrawable(R.drawable.ambulance);
@@ -201,11 +201,11 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             holder.txtTypeText.setText(curData.getName());
             holder.imgvTypeIcon.setImageDrawable(curData.getImg());
 
-            if(curData.getListening()){
+            if (curData.getListening()) {
                 /* 듣는 중 */
                 holder.imgvWave.setImageResource(R.drawable.voice_on_light);
 
-            }else{
+            } else {
                 /* 안 듣는 중 */
                 holder.imgvWave.setImageResource(R.drawable.soundwave_off);
             }
@@ -219,7 +219,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
     }
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder{
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imgvTypeIcon;
         private TextView txtTypeText;
@@ -233,6 +233,25 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             imgvWave = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_Wave);
 
         }
+
+    }
+
+
+    /*
+
+        HttpSoundRequest 를 통해 결과 값을 처리하는
+        Callback 함수
+
+        Classified Index 에 해당하는 UI 를 처리한다.
+
+    */
+    @Override
+    public void onSoundResponseResult(int index) {
+
+        recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
+        recyclerAdapter.listData.get(index).setListening(true);
+        recyclerAdapter.preListeningIdx = index;
+        recyclerAdapter.notifyDataSetChanged();
 
     }
 

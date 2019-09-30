@@ -28,7 +28,7 @@ public class TimeHandler extends Handler {
 
     /* UI callback 을 위한 인터페이스 */
     public interface TimeHandleResponse{
-        void processUI();
+        void processTimerUI();
     }
 
     /* 타임 핸들러를 요청한 해당 프레그먼트의 주소 값을 저장 */
@@ -43,7 +43,7 @@ public class TimeHandler extends Handler {
     public void handleMessage(Message msg){
 
         /* Call back */
-        delegate.processUI();
+        delegate.processTimerUI();
 
     }
 

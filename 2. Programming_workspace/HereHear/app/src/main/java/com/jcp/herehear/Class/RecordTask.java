@@ -24,12 +24,14 @@ import static java.lang.Math.log10;
 public class RecordTask extends TimerTask {
 
     /* member variables */
-//    private MediaRecorder recorder;             // 미디어 레코더
-    private WavRecorder wavRecorder;            // wav 형식 레코더
+//    private MediaRecorder recorder;                   // 미디어 레코더
+    private WavRecorder wavRecorder;                    // wav 형식 레코더
+    private HttpSoundRequest.AsyncResponse delegate;    // Http 콜백처리를 위한 delegate
 
     /* constructor */
-    public RecordTask(WavRecorder wavRecorder) {
+    public RecordTask(WavRecorder wavRecorder, HttpSoundRequest.AsyncResponse delegate) {
         this.wavRecorder = wavRecorder;
+        this.delegate = delegate;
     }
 
 
@@ -47,7 +49,7 @@ public class RecordTask extends TimerTask {
         wavRecorder.stopRecording();
 
         /* Runnable 인터페이스를 상속한 요청 클래스 사용 */
-        new HttpSoundRequest(0).start();
+        new HttpSoundRequest(0, delegate).start();
 
         /*
 
