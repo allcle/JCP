@@ -1,4 +1,4 @@
-### 안드로이드 어플리케이션 프로젝트
+### JCP - 안드로이드 어플리케이션 프로젝트
 
 ___
 
@@ -78,10 +78,19 @@ README.md 는 기호에 맞게 수정하셔도 됩니다.
 
 
 
+##### 19.10.01.근화 191001 02:18 DangerFragment http request 후 UI 콜백 처리 완료 - 변경사항
+
+- DangerFragment 레코딩-통신 후 결과 값 UI 콜백으로 처리 완료
+- DangerFragment 는 큰 기능 구현 끝 -> 서버 실서버 올리고 WAV 녹음 관련 데시벨 등 세부부분 정제.
+- CryFragment 필요없는 코드 삭제
+
+
+
 ---
 
-###### TODO List
+###### TODO List - 2019.10.01 현재 남은 것.
 
 * 현재 모든 대화가 완료된 시점에 결과 자막을 보여주는데 중간에 계속해서 텍스트가 수정되도록 onPartialResults 메서드를 사용해서 수정 구현할것.
 * SttFragment UI 구조 수정 -> 가이드파일과 비슷하게.
-* Cry Fragment RecyclerView 구현 및 AsyncTask 클래스를 통한 라즈베리파이 통신구현.
+* Cry Fragment - Firebase DB 리스닝 및 UI 처리 구현 + 스크롤 구현해야함.
+* TabLayout 현재 코드 최적화에 문제가 있는 것 같음 -> 확인 후 수정 해야함.

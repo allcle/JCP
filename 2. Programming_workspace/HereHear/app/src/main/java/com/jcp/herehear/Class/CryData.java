@@ -16,9 +16,8 @@ package com.jcp.herehear.Class;
 
 public class CryData {
 
-    private String whenCry;//whenCry:언제 울었는가. 시간. string으로 저장하게 함.
-    private String howCry;//howCry:얼마나 크게 울었는가. 데시벨로 나타날 예정. string저장
-    private boolean isListening;//들리니!
+    private String whenCry;                 //whenCry:언제 울었는가. 시간. string으로 저장하게 함.
+    private String howCry;                  //howCry:얼마나 크게 울었는가. 데시벨로 나타날 예정. string저장
 
     /* constructor */
     public CryData() {
@@ -27,7 +26,6 @@ public class CryData {
     public CryData(String whenCry, String howCry) {
         this.whenCry = whenCry;
         this.howCry = howCry;
-        this.isListening = false;
     }
 
 
@@ -41,17 +39,6 @@ public class CryData {
     }
     public void setHowCry(String howCry) {
         this.howCry = howCry;
-    }
-    public Boolean getListening() {
-        return isListening;
-    }
-    public void setListening(Boolean listening) {
-        isListening = listening;
-    }
-
-    public String sendDjango() {//FIXME!여기 dangerpart 주석보니까 안된거같은데 된건가요?
-        String result = "";
-        return result; //"Failed to fetch data!";
     }
 
 }

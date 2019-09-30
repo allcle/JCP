@@ -3,6 +3,9 @@ package com.jcp.herehear.Class;
 import android.util.Log;
 
 import com.jcp.herehear.Fragment.DangerFragment;
+
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -15,14 +18,20 @@ import okhttp3.Response;
 
 public class HttpSoundRequest extends Thread {
 
+    public interface AsyncResponse {
+        void onSoundResponseResult(int index);
+    }
+
     private final String SERVER_URL = "http://10.0.2.2:8000/uploads/";
     private double powerDb;
     private final double LIMIT_DECIBEL = 80.0;
     private final MediaType CONTENT_TYPE = MediaType.parse("audio/wav");
+    private AsyncResponse delegate;
 
 
-    public HttpSoundRequest(double powerDb) {
+    public HttpSoundRequest(double powerDb, AsyncResponse delegate) {
         this.powerDb = powerDb;
+        this.delegate = delegate;
     }
 
     @Override
@@ -55,13 +64,13 @@ public class HttpSoundRequest extends Thread {
                 */
 //                File wavFile = new File("/sdcard/drilling20.wav");        // DEBUG
                 Log.d("WAVFILE to string", wavFile.toString());
-                if(wavFile.isFile()){
+                if (wavFile.isFile()) {
                     Log.d("파일 유효성 검사", "파일 정상 임");
                 }
 
                 RequestBody requestBody = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
-                        .addFormDataPart("file",wavFile.getName(), RequestBody.create(wavFile, CONTENT_TYPE))
+                        .addFormDataPart("file", wavFile.getName(), RequestBody.create(wavFile, CONTENT_TYPE))
                         .build();
 
                 Request request = new Request.Builder()
@@ -69,33 +78,20 @@ public class HttpSoundRequest extends Thread {
                         .post(requestBody)
                         .build();
 
-                try{
+                try {
                     Response response = okHttpClient.newCall(request).execute();
-                    if (!response.isSuccessful()){
+                    if (!response.isSuccessful()) {
                         Log.d("Request Failed!", "Unexpected code " + response);
                     }
-                    Log.d("Response Success! --", response.body().string());
+                    String strResponse = response.body().string();
+                    Log.d("Response Success! --", strResponse);
+                    JSONObject resObj = new JSONObject(strResponse);
+                    int res = resObj.getInt("result");
 
-                    /* TODO : 이부분에서 UI 핸들링 한다!! */
+                    /* Callback 으로 처리 */
+                    delegate.onSoundResponseResult(res);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
