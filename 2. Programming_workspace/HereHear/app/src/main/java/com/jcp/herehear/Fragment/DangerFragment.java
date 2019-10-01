@@ -30,13 +30,10 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class DangerFragment extends Fragment implements TimeHandler.TimeHandleResponse, HttpSoundRequest.AsyncResponse {
 
-    // sendToDjango에서 찾는 경로 : /storage/emulated/0/Recorded/audio.wav
     private final String RECORD_FILE_NAME =
             "recorded.wav";                         // wav 파일 이름
     public final static String RECORD_FILE_DIR =
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
-    //    public final static String RECORD_FILE_DIR =
-//            "/sdcard/tpRecorded";
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
 
     private Timer mTimer;
@@ -110,7 +107,6 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
                     /* 레코딩 시작 */
                     recordTask = new RecordTask(wavRecorder, delegate);
-//                    recordTask.startRecoding();
                     wavRecorder.startRecording();
                     mTimer = new Timer();
                     mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
@@ -128,14 +124,12 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                     txtTime.setText("00:00:00");
 
                     /* 레코딩 종료 */
-//                    recordTask.finishRecording();
                     wavRecorder.stopRecording();
                     mTimer.cancel();
 
                     recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
                     recyclerAdapter.preListeningIdx = 5;
                     recyclerAdapter.notifyDataSetChanged();
-
                 }
             }
 

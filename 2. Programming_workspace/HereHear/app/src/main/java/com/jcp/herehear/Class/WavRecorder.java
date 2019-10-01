@@ -1,6 +1,10 @@
 package com.jcp.herehear.Class;
 
 import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
+import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,10 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
-import android.os.Environment;
-import android.util.Log;
+import static java.lang.StrictMath.abs;
 
 /*
 
@@ -37,7 +38,10 @@ public class WavRecorder {
     private static final int RECORDER_SAMPLERATE = 44100;
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
+    private static final float FUDGE = 0.6f;
+    private static final float MAX_16_BIT = 32768;
     short[] audioData;
+    byte data[]; // testing
 
     private AudioRecord recorder = null;
     private int bufferSize = 0;
@@ -61,10 +65,23 @@ public class WavRecorder {
 
     public double getMaxAmplitude() {
 
-        /* TODO : 이곳에 AudioRecord 클래스를 통해 데시벨 관련 함수 구현해야 함. */
+        /* AudioRecord 클래스를 통해 데시벨 관련 함수 구현 */
+        /* 소스 코드 https://susemi99.tistory.com/1017 */
 
+        double sum = 0;
+        double sqsum = 0;
+        int len = data.length;
+        for (int i = 0; i < len; i++)
+        {
+            final long v = data[i];
+            sum += v;
+            sqsum += v * v;
+        }
+        double power = (sqsum - sum * sum / len) / len;
+        power /= MAX_16_BIT * MAX_16_BIT;
+        double result = Math.log10(power) * 10f + FUDGE;
 
-        return 0.0;
+        return abs(result);
     }
 
     private String getFilename() {
@@ -113,7 +130,7 @@ public class WavRecorder {
     }
 
     private void writeAudioDataToFile() {
-        byte data[] = new byte[bufferSize];
+        data = new byte[bufferSize]; // testing
         String filename = getTempFilename();
         FileOutputStream os = null;
 
