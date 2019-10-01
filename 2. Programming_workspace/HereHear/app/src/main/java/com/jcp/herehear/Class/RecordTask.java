@@ -11,10 +11,6 @@ import java.util.TimerTask;
     .wav 파일의 정확한 포맷이 맞지 않아 WavRecorder 클래스로 대체하였습니다..
     (.wav 파일 포맷이 정확하지 않아 Librosa 에서 load가 불가능했음)
 
-    TODO : getMaxAmplitude 값을 통해 데시벨 처리하는 것이 WavRecorder 클래스에 없습니다.
-    TODO : WavRecorder 는 AudioRecord 를 .wav 전용으로 래핑한 클래스인데
-    TODO : AudioRecord 에 주어진 함수를 통해 WavRecorder.getMaxAmplitude() 함수를 구현해야 합니다.
-
 */
 
 public class RecordTask extends TimerTask {

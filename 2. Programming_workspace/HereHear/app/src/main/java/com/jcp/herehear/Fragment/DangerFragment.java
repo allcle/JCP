@@ -96,6 +96,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             @Override
             public void onClick(View view) {
                 if (!isListening) {
+                    /* TODO : Permission 확인 요망 */
                     /* 듣기 시작 */
                     Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
                     isListening = true;
@@ -149,11 +150,11 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
             /* 경적, 개, 드릴, 총, 사이렌, nothing - 예시로 생성 */
             Drawable icon_horn = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_barking = getResources().getDrawable(R.drawable.police);
-            Drawable icon_drill = getResources().getDrawable(R.drawable.horn);
+            Drawable icon_barking = getResources().getDrawable(R.drawable.ambulance);
+            Drawable icon_drill = getResources().getDrawable(R.drawable.ambulance);
             Drawable icon_gun = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_siren = getResources().getDrawable(R.drawable.police);
-            Drawable icon_nothing = getResources().getDrawable(R.drawable.horn);
+            Drawable icon_siren = getResources().getDrawable(R.drawable.ambulance);
+            Drawable icon_nothing = getResources().getDrawable(R.drawable.ambulance);
 
             DangerData horn = new DangerData("경적소리", icon_horn);
             DangerData barking = new DangerData("개짖는소리", icon_barking);
