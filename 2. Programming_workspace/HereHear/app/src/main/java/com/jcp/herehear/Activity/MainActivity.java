@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Fragment.CryFragment;
 import com.jcp.herehear.Fragment.DangerFragment;
 import com.jcp.herehear.Fragment.SttFragment;
@@ -83,7 +83,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* Permission Check */
+        Permission.CheckAllPermission(MainActivity.this);
+
+        /*
+        // Permission Check
         int record_permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         int write_permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             reqPermissionArray = permissions.toArray(reqPermissionArray);
             ActivityCompat.requestPermissions(this, reqPermissionArray, 1);
         }
+        */
 
         /*
         if (write_permissionCheck == PackageManager.PERMISSION_DENIED)
@@ -114,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         setViewPager(mViewPager, mTabLayout);
     }
 
+    /* Permission 관련 문구 실제 사용하진 않음 */
     public void onRequestPermissionResult(int requestCode,
                                           String permissions[], int[] grantResults){
         switch(requestCode){
