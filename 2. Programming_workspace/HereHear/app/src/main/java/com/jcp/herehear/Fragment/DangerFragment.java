@@ -1,9 +1,11 @@
 package com.jcp.herehear.Fragment;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Class.RecordTask;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.Class.WavRecorder;
+import com.jcp.herehear.Dialog.FragmentDialog;
 import com.jcp.herehear.R;
 
 import java.util.ArrayList;
@@ -109,6 +112,15 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                         Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
                         isListening = true;
                         imgvPlay.setImageResource(R.drawable.sound_on);
+
+                        /* 팝업 실험 코드.. 장고 클라우드에 업로드하면 지울 것 */
+                        /*
+                        FragmentDialog dialog = new FragmentDialog();
+                        dialog.show(getActivity().getSupportFragmentManager(), "tag");
+                        FragmentDialog.delayTime(RECORD_CYCLE, dialog);
+                        Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(RECORD_CYCLE);
+                        */
 
                         /* 진행시간 갱신 */
                         baseTime = SystemClock.elapsedRealtime();
@@ -257,18 +269,19 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         recyclerAdapter.preListeningIdx = index;
         recyclerAdapter.notifyDataSetChanged();
 
-        /* TODO : index에맞는 팝업 출력 */
-        /* TODO : 팝업 3초 후 자동 종료 및 터치에 의해 자동 종료 */
         /* TODO : 진동 구현 */
+        /* TODO : popup_danger_background.xml를 dialog로 출력하는 것이 목적 */
 
         MainActivity mainActivity = (MainActivity)getActivity();
         final Dialog popup = new Dialog(mainActivity);
         popup.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Log.d("Classified .wav : ", String.valueOf(index));
 
-        /* index에 따라 팝업을 다르게 띄운다. */
-        popup.setContentView(R.layout.popup_danger_background);
-        popup.show();
-
+        /* TODO : 밑의 tag부분에 index를 보내서 이를 통해 layout 선택하도록 한다. */
+        FragmentDialog dialog = new FragmentDialog();
+        dialog.show(getActivity().getSupportFragmentManager(), "tag");
+        FragmentDialog.delayTime(RECORD_CYCLE, dialog);
+        Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(RECORD_CYCLE);
     }
 }

@@ -56,7 +56,7 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
 
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         Log.d("msg", "********************* CryFragment Constructer *********************");
 
@@ -112,6 +112,7 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
             }
 
         });
+
         return view;
     }
 

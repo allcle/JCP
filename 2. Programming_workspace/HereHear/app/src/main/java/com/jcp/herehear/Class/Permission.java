@@ -17,12 +17,15 @@ public class Permission extends Activity {
     public static void CheckAllPermission(Activity context){
         int record_permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO);
         int write_permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int vibrate_permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.VIBRATE);
 
         ArrayList<String> permissions = new ArrayList<String>();
         if (write_permissionCheck == PackageManager.PERMISSION_DENIED)
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (record_permissionCheck== PackageManager.PERMISSION_DENIED)
             permissions.add(Manifest.permission.RECORD_AUDIO);
+        if (vibrate_permissionCheck== PackageManager.PERMISSION_DENIED)
+            permissions.add(Manifest.permission.VIBRATE);
 
         if(permissions.size()>0){
             String[] reqPermissionArray = new String[permissions.size()];
@@ -35,12 +38,15 @@ public class Permission extends Activity {
     public static boolean CheckPermissionProblem(Activity context){
         int record_permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO);
         int write_permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int vibrate_permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.VIBRATE);
 
         ArrayList<String> permissions = new ArrayList<String>();
         if (write_permissionCheck == PackageManager.PERMISSION_DENIED)
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (record_permissionCheck== PackageManager.PERMISSION_DENIED)
             permissions.add(Manifest.permission.RECORD_AUDIO);
+        if (vibrate_permissionCheck== PackageManager.PERMISSION_DENIED)
+            permissions.add(Manifest.permission.VIBRATE);
 
         if(permissions.size()>0)
             return false;
@@ -61,10 +67,12 @@ public class Permission extends Activity {
                                           String permissions[], int[] grantResults){
         switch(requestCode){
             case 1:{
-                if(grantResults.length==2){
+                if(grantResults.length==3){
                     Toast.makeText(this, "필요한 승인이 모두 허가되었습니다.", Toast.LENGTH_LONG).show();
                 }
                 else{
+                    Toast.makeText(this, "설정에서 필요한 승인을 허가할 수 있습니다.", Toast.LENGTH_LONG).show();
+                    /*
                     if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED
                             && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
                         Toast.makeText(this, "두 가지 승인이 모두 허가되지 않았습니다.", Toast.LENGTH_LONG).show();
@@ -72,6 +80,7 @@ public class Permission extends Activity {
                         Toast.makeText(this, "Record Audio 승인이 허가 되었습니다. 저장 승인을 필요로합니다.", Toast.LENGTH_LONG).show();
                     else if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
                         Toast.makeText(this, "저장 승인이 허가 되었습니다. Record Audio 승인을 필요로합니다.", Toast.LENGTH_LONG).show();
+                     */
                 }
                 return;
             }
