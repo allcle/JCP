@@ -1,9 +1,9 @@
 # team name : JCP 
-(justice, Communication, Personal)....(Java c++ Python....)
 
 ### 개요
 * Hongik.univ computer programming major graduation project
-* project subject : 청각장애인을 위한 서비스 - 프로젝트명 미정
+* project name : Here, Hear
+* project subject : 청각장애인을 위한 서비스
 * project member : 한인수(팀장, SW 개발자), 이근주(HW 개발자), 정근화(SW 개발자), 김예인(디자이너), 길재은(FE개발자)
 
 ### cooperation tool
