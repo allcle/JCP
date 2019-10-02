@@ -16,8 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jcp.herehear.Activity.MainActivity;
 import com.jcp.herehear.Class.DangerData;
 import com.jcp.herehear.Class.HttpSoundRequest;
+import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Class.RecordTask;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.Class.WavRecorder;
@@ -96,25 +98,29 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             @Override
             public void onClick(View view) {
                 if (!isListening) {
-                    /* TODO : Permission 확인 요망 */
-                    /* 듣기 시작 */
-                    Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
-                    isListening = true;
-                    imgvPlay.setImageResource(R.drawable.sound_on);
+                    /* Fragment Permission 체크 */
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    Permission.CheckAllPermission(mainActivity);
+                    boolean permissionCheck = Permission.CheckPermissionProblem(mainActivity);
+                    if(permissionCheck){
+                        /* 듣기 시작 */
+                        Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
+                        isListening = true;
+                        imgvPlay.setImageResource(R.drawable.sound_on);
 
-                    /* 진행시간 갱신 */
-                    baseTime = SystemClock.elapsedRealtime();
-                    timeHandler.sendEmptyMessage(0);
+                        /* 진행시간 갱신 */
+                        baseTime = SystemClock.elapsedRealtime();
+                        timeHandler.sendEmptyMessage(0);
 
-                    /* 레코딩 시작 */
-                    recordTask = new RecordTask(wavRecorder, delegate);
-                    wavRecorder.startRecording();
-                    mTimer = new Timer();
-                    mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
+                        /* 레코딩 시작 */
+                        recordTask = new RecordTask(wavRecorder, delegate);
+                        wavRecorder.startRecording();
+                        mTimer = new Timer();
+                        mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
 
-                    recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(true);
-                    recyclerAdapter.notifyDataSetChanged();
-
+                        recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(true);
+                        recyclerAdapter.notifyDataSetChanged();
+                    }
                 } else {
                     /* 듣기 종료 */
                     isListening = false;
