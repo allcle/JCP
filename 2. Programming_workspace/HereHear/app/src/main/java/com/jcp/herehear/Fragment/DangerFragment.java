@@ -1,5 +1,6 @@
 package com.jcp.herehear.Fragment;
 
+import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -118,6 +120,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                         mTimer = new Timer();
                         mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
 
+                        /* 레코딩 관련 본코드 */
                         recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(true);
                         recyclerAdapter.notifyDataSetChanged();
                     }
@@ -254,6 +257,18 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         recyclerAdapter.preListeningIdx = index;
         recyclerAdapter.notifyDataSetChanged();
 
-    }
+        /* TODO : index에맞는 팝업 출력 */
+        /* TODO : 팝업 3초 후 자동 종료 및 터치에 의해 자동 종료 */
+        /* TODO : 진동 구현 */
 
+        MainActivity mainActivity = (MainActivity)getActivity();
+        final Dialog popup = new Dialog(mainActivity);
+        popup.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Log.d("Classified .wav : ", String.valueOf(index));
+
+        /* index에 따라 팝업을 다르게 띄운다. */
+        popup.setContentView(R.layout.popup_danger_background);
+        popup.show();
+
+    }
 }
