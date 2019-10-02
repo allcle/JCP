@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.jcp.herehear.Activity.MainActivity;
+import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.R;
 
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class SttFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_stt, container, false);
 
         /* 권한 체크 */
-        setSpeechPermission();
+        // setSpeechPermission();
 
         /* 초기화 */
         imgv_mic = view.findViewById(R.id.SttFragment_ImageView_Mic);
@@ -68,7 +70,12 @@ public class SttFragment extends Fragment {
             public void onClick(View view) {
                 if(!isDictating){
                     /* 음성인식 재생 아닌 상태 - 시작 */
-                    speak();
+                    /* Fragment Permission 체크 */
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    Permission.CheckAllPermission(mainActivity);
+                    boolean permissionCheck = Permission.CheckPermissionProblem(mainActivity);
+                    if(permissionCheck)
+                        speak();
                 }else{
                     /* 음성인식 재생 중인 상태 - 중단 */
                     stopSpeak();

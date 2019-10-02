@@ -1,12 +1,8 @@
 
 package com.jcp.herehear.Fragment;
 
-import android.content.ContentValues;
-import android.media.MediaRecorder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +12,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jcp.herehear.Activity.MainActivity;
 import com.jcp.herehear.Class.CryData;
+import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.R;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class CryFragment extends Fragment implements TimeHandler.TimeHandleResponse {
 
@@ -87,15 +82,21 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
                 if (!isListening) {
                     /* 듣기 시작 */
                     Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
-                    isListening = true;
-                    imgvPlay.setImageResource(R.drawable.cry_yes);
+                    /* Fragment Permission 체크 */
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    Permission.CheckAllPermission(mainActivity);
+                    boolean permissionCheck = Permission.CheckPermissionProblem(mainActivity);
 
-                    /* Firebase realtime DB Listening 시작 */
+                    if(permissionCheck){
+                        isListening = true;
+                        imgvPlay.setImageResource(R.drawable.cry_yes);
 
-                    /* 진행시간 갱신 */
-                    baseTime = SystemClock.elapsedRealtime();
-                    myTimer.sendEmptyMessage(0);
+                        /* Firebase realtime DB Listening 시작 */
 
+                        /* 진행시간 갱신 */
+                        baseTime = SystemClock.elapsedRealtime();
+                        myTimer.sendEmptyMessage(0);
+                    }
                 } else {
                     /* 듣기 종료 */
                     isListening = false;
