@@ -32,7 +32,6 @@ public class RecordTask extends TimerTask {
 
         /* 데시벨 계산 */
         Log.d("msg", "4초 경과! 4초마다 수행되야 정상.");
-        /* TODO : 이곳에 powerDb = 20 * log10(wavRecorder.getMaxAmplitude()) 를 써야 함 */
         //final double powerDb = 20 * Math.log10 (wavRecorder.getMaxAmplitude());
         final double powerDb = wavRecorder.getMaxAmplitude();
 
