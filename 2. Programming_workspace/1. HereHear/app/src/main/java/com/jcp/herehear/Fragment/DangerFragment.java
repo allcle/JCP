@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +40,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     public final static String RECORD_FILE_DIR =
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
+    private final int Vibrate_RECORD_CYCLE = 2000;          // wav 파일 레코딩 주기
 
     private Timer mTimer;
     private RecordTask recordTask;                  // 주기별로 녹음하고 요청처리하는 Task
@@ -276,7 +276,8 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             MainActivity mainActivity = (MainActivity)getActivity(); // 메인 엑티비티 가져오기
             FragmentDialog dialog = new FragmentDialog(); // 출력하고자 하는 팝업 dialog 생성자 호출
             dialog.setIndex(index); // 판별한 결과를 팝업에 전달
-            dialog.getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND); // 팝업 배경 투명하게 하는 코드
+            // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); // 팝업 배경 투명하게 하는 코드
+            // dialog.getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND); // 팝업 배경 투명하게 하는 코드
             dialog.show(getActivity().getSupportFragmentManager(), "tag"); // 팝업 출력
 
             // 4초 후 팝업 자동 종료
@@ -284,7 +285,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
             // 진동 구현
             Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(RECORD_CYCLE);
+            vibrator.vibrate(Vibrate_RECORD_CYCLE);
         }
     }
 }
