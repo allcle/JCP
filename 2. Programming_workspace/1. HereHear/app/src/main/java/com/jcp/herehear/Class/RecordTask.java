@@ -16,7 +16,6 @@ import java.util.TimerTask;
 public class RecordTask extends TimerTask {
 
     /* member variables */
-//    private MediaRecorder recorder;                   // 미디어 레코더
     private WavRecorder wavRecorder;                    // wav 형식 레코더
     private HttpSoundRequest.AsyncResponse delegate;    // Http 콜백처리를 위한 delegate
 
