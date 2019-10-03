@@ -2,7 +2,7 @@
 
 ##### JCP Danger Sound Server : JCP 프로젝트 청각장애인을 위한 위험소리 분류모델 서버
 
-- Server URL : 미정
+- Server URL : http://35.233.183.56:8000 (임시)
 
 
 
@@ -18,18 +18,14 @@ $ python3 -m venv env
 $ source env/bin/activate
 
 # 가상환경에 라이브러리 설치
-# 관리자 권한으로 두번 설치해야 하는 라이브러리 있음(librosa, tensorflow, keras
 # tensorflow, keras 는 다운그레이드 버전에서 실행 - views.py 주석 참고
 #   - 최신버전 오류발생 : https://github.com/keras-team/keras/issues/13336
 
 (env)$ pip install django
 (env)$ pip install djangorestframework
 (env)$ pip install librosa
-(env)$ sudo pip install librosa
 (env)$ pip install tensorflow==1.13.1
-(env)$ sudo pip install tensorflow==1.13.1
 (env)$ pip install keras==2.2.4
-(env)$ sudo pip install keras==2.2.4
 (env)$ pip install pillow
 (env)$ pip install matplotlib
 
@@ -61,7 +57,7 @@ $ python manage.py runserver
 
 ```
 $ curl -X POST \
-  http://localhost:8000/uploads/ \
+  http://35.233.183.56:8000/uploads/ \
   -H 'cache-control: no-cache' \
   -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
   -F file=@dog_bark35.wav
@@ -76,7 +72,7 @@ $ curl -X POST \
 ```
 POST /uploads/ HTTP/1.1
 Content-Length: 300108
-Host: localhost:8000
+Host: 35.233.183.56:8000
 Content-Type: multipart/form-data;boundary=------FormBoundaryShouldDifferAtRuntime
 
 ------FormBoundaryShouldDifferAtRuntime
