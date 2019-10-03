@@ -12,8 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static java.lang.StrictMath.abs;
-
 /*
 
     .wav 가 librosa 에서 제대로 load 되려면
@@ -78,10 +76,12 @@ public class WavRecorder {
             sqsum += v * v;
         }
         double power = (sqsum - sum * sum / len) / len;
+        Log.d("power in WavRecorder : ", String.valueOf(power));
         power /= MAX_16_BIT * MAX_16_BIT;
         double result = Math.log10(power) * 10f + FUDGE;
+        Log.d("데시벨 in WavRecorder : ", String.valueOf(result));
 
-        return abs(result);
+        return result;
     }
 
     private String getFilename() {

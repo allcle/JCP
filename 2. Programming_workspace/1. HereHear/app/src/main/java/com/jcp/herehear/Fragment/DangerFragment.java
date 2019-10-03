@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -112,13 +113,13 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                         imgvPlay.setImageResource(R.drawable.sound_on);
 
                         /* 팝업 실험 코드.. 장고 클라우드에 업로드하면 지울 것 */
-
+                        /*
                         FragmentDialog dialog = new FragmentDialog();
                         dialog.show(getActivity().getSupportFragmentManager(), "tag");
                         FragmentDialog.delayTime(RECORD_CYCLE, dialog);
                         Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
                         vibrator.vibrate(RECORD_CYCLE);
-
+                         */
 
                         /* 진행시간 갱신 */
                         baseTime = SystemClock.elapsedRealtime();
@@ -261,23 +262,29 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     */
     @Override
     public void onSoundResponseResult(int index) {
+        Log.d("Classified .wav ", String.valueOf(index));
 
+        /* 그래프 움짤을 바꾸는 코드 */
         recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
         recyclerAdapter.listData.get(index).setListening(true);
         recyclerAdapter.preListeningIdx = index;
         recyclerAdapter.notifyDataSetChanged();
 
-        MainActivity mainActivity = (MainActivity)getActivity();
-        //final Dialog popup = new Dialog(mainActivity);
-        //popup.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Log.d("Classified .wav : ", String.valueOf(index));
+        /* 팝업 출력 코드 */
+        // index가 5로 판별되어 배경음인 경우, 팝업 출력 자체를 안한다.
+        if(index < 5 && index >= 0){
+            MainActivity mainActivity = (MainActivity)getActivity(); // 메인 엑티비티 가져오기
+            FragmentDialog dialog = new FragmentDialog(); // 출력하고자 하는 팝업 dialog 생성자 호출
+            dialog.setIndex(index); // 판별한 결과를 팝업에 전달
+            dialog.getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND); // 팝업 배경 투명하게 하는 코드
+            dialog.show(getActivity().getSupportFragmentManager(), "tag"); // 팝업 출력
 
-        /* TODO : 매개변수로 index를 보내서 이를 통해 layout 선택하도록 한다. */
-        /* TODO : 즉, Dialog코드는 하나만 필요하고 어떤 레이아웃을 선택할지를 통해 출력을 바꾸면 된다. */
-        FragmentDialog dialog = new FragmentDialog();
-        dialog.show(getActivity().getSupportFragmentManager(), "tag");
-        FragmentDialog.delayTime(RECORD_CYCLE, dialog);
-        Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(RECORD_CYCLE);
+            // 4초 후 팝업 자동 종료
+            FragmentDialog.delayTime(RECORD_CYCLE, dialog);
+
+            // 진동 구현
+            Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(RECORD_CYCLE);
+        }
     }
 }

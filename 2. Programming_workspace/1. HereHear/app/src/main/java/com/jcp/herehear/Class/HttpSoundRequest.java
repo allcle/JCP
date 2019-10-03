@@ -22,7 +22,8 @@ public class HttpSoundRequest extends Thread {
         void onSoundResponseResult(int index);
     }
 
-    private final String SERVER_URL = "http://10.0.2.2:8000/uploads/";
+    //private final String SERVER_URL = "http://10.0.2.2:8000/uploads/";
+    private final String SERVER_URL = "http://35.233.183.56:8000/uploads/";
     private double powerDb;
     private final double LIMIT_DECIBEL = 65.0;
     private final MediaType CONTENT_TYPE = MediaType.parse("audio/wav");
@@ -39,8 +40,10 @@ public class HttpSoundRequest extends Thread {
         // 장고와 연결하여 temp wav 전달, return값에 따라 UI에 표시
         Log.d("Msg", "sendDjango, startRecording 절차식 동작");
         Log.d("powerDb : ", String.valueOf(powerDb));
-        if(powerDb >= LIMIT_DECIBEL){
-            Log.d("msg : ", "powerDb가 80을 초과했습니다.");
+        /* TODO : 안드로이드에서 사용시 비교 좌항을 powerDb로 바꾸기 */
+        //if(powerDb >= LIMIT_DECIBEL){
+        if(90 >= LIMIT_DECIBEL){
+            Log.d("msg : ", "powerDb가 65를 초과했습니다.");
             /* 여기서 Http 요청 */
             try {
 
@@ -100,7 +103,7 @@ public class HttpSoundRequest extends Thread {
 
 
         } else {
-            Log.d("msg : ", "powerDb가 80을 초과하지 못했습니다 : " + powerDb);
+            Log.d("msg : ", "powerDb가 65를 초과하지 못했습니다 : " + powerDb);
         }
     }
 
