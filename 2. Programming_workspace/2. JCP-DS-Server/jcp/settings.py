@@ -26,7 +26,8 @@ SECRET_KEY = ')@tpj287h=!-i9+&9lps)t555kh(j2qgro9sv*)w2j!&z&2*4w'
 DEBUG = True
 
 # To debug 허용된 호스트 - 안드로이드 가상환경에서는 localhost 를 10.0.2.2 로 접근한다.
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost']
+# 임시 GCE 서버 IP : 35.223.183.56
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '35.233.183.56']
 
 
 # Application definition
