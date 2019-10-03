@@ -1,6 +1,8 @@
 package com.jcp.herehear.Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -276,8 +278,6 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             MainActivity mainActivity = (MainActivity)getActivity(); // 메인 엑티비티 가져오기
             FragmentDialog dialog = new FragmentDialog(); // 출력하고자 하는 팝업 dialog 생성자 호출
             dialog.setIndex(index); // 판별한 결과를 팝업에 전달
-            // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); // 팝업 배경 투명하게 하는 코드
-            // dialog.getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND); // 팝업 배경 투명하게 하는 코드
             dialog.show(getActivity().getSupportFragmentManager(), "tag"); // 팝업 출력
 
             // 4초 후 팝업 자동 종료
