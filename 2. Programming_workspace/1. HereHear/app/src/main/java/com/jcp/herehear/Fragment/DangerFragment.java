@@ -1,6 +1,5 @@
 package com.jcp.herehear.Fragment;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -114,13 +112,13 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                         imgvPlay.setImageResource(R.drawable.sound_on);
 
                         /* 팝업 실험 코드.. 장고 클라우드에 업로드하면 지울 것 */
-                        /*
+
                         FragmentDialog dialog = new FragmentDialog();
                         dialog.show(getActivity().getSupportFragmentManager(), "tag");
                         FragmentDialog.delayTime(RECORD_CYCLE, dialog);
                         Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
                         vibrator.vibrate(RECORD_CYCLE);
-                        */
+
 
                         /* 진행시간 갱신 */
                         baseTime = SystemClock.elapsedRealtime();
@@ -170,12 +168,12 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         public RecyclerAdapter() {
 
             /* 경적, 개, 드릴, 총, 사이렌, nothing - 예시로 생성 */
-            Drawable icon_horn = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_barking = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_drill = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_gun = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_siren = getResources().getDrawable(R.drawable.ambulance);
-            Drawable icon_nothing = getResources().getDrawable(R.drawable.ambulance);
+            Drawable icon_horn = getResources().getDrawable(R.drawable.danger_icon_horn_yes);
+            Drawable icon_barking = getResources().getDrawable(R.drawable.danger_icon_dog_yes);
+            Drawable icon_drill = getResources().getDrawable(R.drawable.danger_icon_drilling_yes);
+            Drawable icon_gun = getResources().getDrawable(R.drawable.danger_icon_gun_yes);
+            Drawable icon_siren = getResources().getDrawable(R.drawable.danger_icon_siren_yes);
+            Drawable icon_nothing = getResources().getDrawable(R.drawable.danger_icon_background_yes);
 
             DangerData horn = new DangerData("경적소리", icon_horn);
             DangerData barking = new DangerData("개짖는소리", icon_barking);
@@ -269,15 +267,13 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         recyclerAdapter.preListeningIdx = index;
         recyclerAdapter.notifyDataSetChanged();
 
-        /* TODO : 진동 구현 */
-        /* TODO : popup_danger_background.xml를 dialog로 출력하는 것이 목적 */
-
         MainActivity mainActivity = (MainActivity)getActivity();
-        final Dialog popup = new Dialog(mainActivity);
-        popup.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //final Dialog popup = new Dialog(mainActivity);
+        //popup.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Log.d("Classified .wav : ", String.valueOf(index));
 
-        /* TODO : 밑의 tag부분에 index를 보내서 이를 통해 layout 선택하도록 한다. */
+        /* TODO : 매개변수로 index를 보내서 이를 통해 layout 선택하도록 한다. */
+        /* TODO : 즉, Dialog코드는 하나만 필요하고 어떤 레이아웃을 선택할지를 통해 출력을 바꾸면 된다. */
         FragmentDialog dialog = new FragmentDialog();
         dialog.show(getActivity().getSupportFragmentManager(), "tag");
         FragmentDialog.delayTime(RECORD_CYCLE, dialog);
