@@ -40,7 +40,6 @@ public class HttpSoundRequest extends Thread {
         Log.d("Msg", "sendDjango, startRecording 절차식 동작");
         Log.d("powerDb : ", String.valueOf(powerDb));
         if(powerDb >= LIMIT_DECIBEL){
-        //if (90 >= LIMIT_DECIBEL) {
             Log.d("msg : ", "powerDb가 80을 초과했습니다.");
             /* 여기서 Http 요청 */
             try {

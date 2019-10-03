@@ -2,6 +2,7 @@
 from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, parser_classes
+from django.http import HttpResponse
 
 import os
 from django.conf import settings
@@ -102,3 +103,7 @@ def classifySound(request):
     result = ModelPredict.ensemble(models, x_test)
 
     return Response({"result": result, "sound": strSound[result]})
+
+@api_view(['GET'])
+def helloworld(request):
+    return HttpResponse("<h1>Helloworld! this server is running!</h1>")
