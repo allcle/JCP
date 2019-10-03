@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,6 +42,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     public final static String RECORD_FILE_DIR =
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
+    private final int Vibrate_RECORD_CYCLE = 2000;          // wav 파일 레코딩 주기
 
     private Timer mTimer;
     private RecordTask recordTask;                  // 주기별로 녹음하고 요청처리하는 Task
@@ -285,7 +285,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
             // 진동 구현
             Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(RECORD_CYCLE);
+            vibrator.vibrate(Vibrate_RECORD_CYCLE);
         }
     }
 }
