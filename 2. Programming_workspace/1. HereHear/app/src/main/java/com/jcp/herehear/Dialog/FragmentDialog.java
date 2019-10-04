@@ -86,6 +86,16 @@ public class FragmentDialog extends DialogFragment {
         this.index = _index;
     }
 
+    /* TODO : 현재 아래 코드 제대로 동작 안함 핸들러 발생 안함
+    *
+    *   W/System.err: java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+        W/System.err:     at android.os.Handler.<init>(Handler.java:204)
+        at android.os.Handler.<init>(Handler.java:118)
+        at com.jcp.herehear.Dialog.FragmentDialog.delayTime(FragmentDialog.java:90)
+        at com.jcp.herehear.Fragment.DangerFragment.onSoundResponseResult(DangerFragment.java:284)
+        at com.jcp.herehear.Class.HttpSoundRequest.run(HttpSoundRequest.java:94)
+
+    * */
     public static void delayTime(long time, final DialogFragment df) {
         new Handler().postDelayed(new Runnable() {
             @Override
