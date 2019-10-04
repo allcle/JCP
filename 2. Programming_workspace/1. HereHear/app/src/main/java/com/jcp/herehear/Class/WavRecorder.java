@@ -6,6 +6,8 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
+import com.jcp.herehear.Fragment.DangerFragment;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,6 +40,7 @@ public class WavRecorder {
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
     private static final float FUDGE = 0.6f;
     private static final float MAX_16_BIT = 32768;
+    private DangerFragment.RecyclerAdapter recyclerAdapter;        // 리사이클러 뷰 어댑터
     short[] audioData;
     byte data[]; // testing
 

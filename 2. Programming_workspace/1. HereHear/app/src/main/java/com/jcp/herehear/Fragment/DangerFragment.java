@@ -44,7 +44,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     public final static String RECORD_FILE_DIR =
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
-    private final int Vibrate_RECORD_CYCLE = 2000;          // wav 파일 레코딩 주기
+    private final int Half_RECORD_CYCLE = 2000;          // wav 파일 레코딩 주기
 
     private Timer mTimer;
     private RecordTask recordTask;                  // 주기별로 녹음하고 요청처리하는 Task
@@ -155,7 +155,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         return view;
     }
 
-    private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+    public class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         /* 임시 데이터 */
         public ArrayList<DangerData> listData = new ArrayList<>();
@@ -282,14 +282,17 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             /*
 
                 이전의 Fragment 가 on 일 경우 끄고 다시 시작하는 방식으로 만들었습니다.
+                delayTime 내부의 함수에서 handler 를 불러올 수가 없어서 delayTime의 dismiss 함수가 작동하지 않습니다.
+                그냥 이전의 dialog가 떠있는 상태일 경우 끄고 다시 띄우는 방식으로 구현하였습니다.
 
             */
 //            FragmentDialog.delayTime(RECORD_CYCLE, dialog);
+            //FragmentDialog.delayTime(Half_RECORD_CYCLE, dialog);
 
             // 진동 구현
             /* TODO : 진동 구현 방식 찾아야 함! */
             Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(Vibrate_RECORD_CYCLE);
+            vibrator.vibrate(Half_RECORD_CYCLE);
         }
     }
 
