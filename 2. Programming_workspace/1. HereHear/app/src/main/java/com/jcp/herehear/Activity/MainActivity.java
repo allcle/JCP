@@ -1,5 +1,6 @@
 package com.jcp.herehear.Activity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             {R.drawable.tab_cry_selected_stt, R.drawable.tab_cry_selected_danger, R.drawable.tab_cry_selected_cry}
     };
 
+    private Drawable tabImgDrawable[][];
+
 
     /*
 
@@ -87,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.MainActivity_ViewPager_viewPager);
         mTabLayout = findViewById(R.id.MainActivity_TabLayout_tabLayout);
         setViewPager(mViewPager, mTabLayout);
+
+        /* 사전에 9개의 Drawable 을 로드 해놓는다. */
+        tabImgDrawable = new Drawable[3][3];
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                tabImgDrawable[i][j] = getResources().getDrawable(tabImg[i][j]);
+            }
+        }
+
     }
 
     /*
@@ -116,19 +128,16 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int selectedIdx) {
 
                 /*
+
                     각 페이지가 선택될 때 마다 이벤트를 정의한다.
 
                     탭의 이미지를 갱신함.
 
                 */
-
-                int pageSize = adapter.getCount();
-                for (int currentIdx = 0; currentIdx < pageSize; currentIdx++) {
+                for (int currentIdx = 0; currentIdx < 3; currentIdx++) {
                     TabLayout.Tab tab = tabLayout.getTabAt(currentIdx);
                     ImageView tpImg = (ImageView) tab.getCustomView();
-                    tpImg.setImageResource(
-                            tabImg[currentIdx][selectedIdx]
-                    );
+                    tpImg.setImageDrawable(tabImgDrawable[currentIdx][selectedIdx]);
                     tab.setCustomView(tpImg);
 
                 }
