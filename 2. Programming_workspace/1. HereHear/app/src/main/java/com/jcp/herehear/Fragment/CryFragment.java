@@ -16,15 +16,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jcp.herehear.Activity.MainActivity;
 import com.jcp.herehear.Class.CryData;
 import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.R;
-
 import java.util.ArrayList;
 
-public class CryFragment extends Fragment implements TimeHandler.TimeHandleResponse {
+public class CryFragment extends Fragment implements TimeHandler.TimeHandleResponse, ValueEventListener {
 
     /* Time Handler - 타이머 클래스 */
     private final TimeHandler myTimer = new TimeHandler(this);
@@ -39,9 +43,16 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
     private boolean isListening;                       // 현재 듣기 여부
     private long baseTime;                             // 경과 시간 체크를 위한 현재 시간 저장
 
+    /* DB 리스닝 */
+    CryFragment thisFragment;                          // 인터페이스 상속 Onclicklistener 내부 사용 위한 저장.
+    private FirebaseDatabase firebaseDatabase;         // Firebase DB
+    private DatabaseReference databaseReference;       // Firebase DB 특정 경로
+    private CryData previousData;                      // 이전 상태값 저장
+    private boolean isCryWaiting;                      // 아이 울음 3초를 기다리고 있는 상태
+
     /* 생성자 */
     public CryFragment() {
-
+        thisFragment = this;
     }
 
     /* 타임 핸들러에 대한 콜백 UI 처리 */
@@ -52,6 +63,63 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         String elapsedTime = String.format("%02d:%02d:%02d", outTime / 1000 / 60, (outTime / 1000) % 60, (outTime % 1000) / 10);
         txtTime.setText(elapsedTime);
         myTimer.sendEmptyMessage(0);
+    }
+
+    /*
+
+        Firebase DB가 변했을 때 처리.
+        DB를 읽고 오브젝트를 검증하여 적절한 UI 를 처리한다.
+
+    */
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+
+        for(DataSnapshot data : iter){
+            CryData obj = data.getValue(CryData.class);
+            obj.setTimeFormatted();
+            Log.d("Firebase DB Changed!", "CRY STATE : " + obj.getState());
+            Log.d("Firebase DB Changed!", "CRY TIME : " + obj.getTime());
+            Log.d("Firebase DB Changed!", "CRY HOUR : " + obj.getFormattedTime().getHours());
+            Log.d("Firebase DB Changed!", "CRY MINUTE : " + obj.getFormattedTime().getMinutes());
+            Log.d("Firebase DB Changed!", "CRY SECOND : " + obj.getFormattedTime().getSeconds());
+
+            if(obj.getState() == CryData.STATE_CRY){
+                /*
+
+                    현재 바뀐 DB의 상태가 우는 상태 일 때
+
+                    0 -> 1 로 바뀌었는지,
+                    1 -> 1 로 바뀌었는지 체크
+
+                */
+                if(previousData.getState() == CryData.STATE_CRY){
+                    /* 1 -> 1 : previousData 와 비교하여 3초 경과했는지 체크*/
+
+                }else{
+                    /* 0 -> 1 : previousData 를 갱신 */
+                    previousData = obj;
+                    isCryWaiting = true;
+                }
+            }else{
+                /*
+
+                    현재 바뀐 DB의 상태가 울지 않는 상태 일 때
+
+                    1 -> 0 으로 바뀌었을 것.
+
+                */
+                previousData = obj;
+                isCryWaiting = false;
+            }
+
+        }
+    }
+
+    /* Firebase DB 리스닝 실패했을 때 */
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
     }
 
 
@@ -75,6 +143,12 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
+        /* Firebase init */
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("stateData");
+        previousData = new CryData();
+        isCryWaiting = false;
+
         /* Listening 통신 쪽 처리 */
         imgvPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +166,7 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
                         imgvPlay.setImageResource(R.drawable.cry_yes);
 
                         /* Firebase realtime DB Listening 시작 */
+                        databaseReference.addValueEventListener(thisFragment);
 
                         /* 진행시간 갱신 */
                         baseTime = SystemClock.elapsedRealtime();
@@ -103,6 +178,7 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
                     imgvPlay.setImageResource(R.drawable.cry_no);
 
                     /* Firebase realtime DB Listening 해제 */
+                    databaseReference.removeEventListener(thisFragment);
 
                     /* 진행시간 초기화 */
                     myTimer.removeMessages(0); //핸들러 메세지 제거
@@ -150,8 +226,8 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
 
             final CryData curData = listData.get(position);
 
-            holder.whenCryText.setText(curData.getWhenCry());
-            holder.howCryText.setText(curData.getHowCry());
+            holder.whenCryText.setText(curData.getTime());
+            holder.howCryText.setText("NULL");
 
         }
 

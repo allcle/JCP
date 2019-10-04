@@ -1,6 +1,8 @@
 package com.jcp.herehear.Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -213,7 +215,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
 
             final DangerData curData = listData.get(position);
 
-            holder.txtTypeText.setText(curData.getName());
+//            holder.txtTypeText.setText(curData.getName());
             holder.imgvTypeIcon.setImageDrawable(curData.getImg());
 
             if (curData.getListening()) {
@@ -244,7 +246,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             super(itemView);
 
             imgvTypeIcon = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_SoundTypeIcon);
-            txtTypeText = itemView.findViewById(R.id.DangerFragmentAdapter_TextView_SoundTypeName);
+//            txtTypeText = itemView.findViewById(R.id.DangerFragmentAdapter_TextView_SoundTypeName);
             imgvWave = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_Wave);
 
         }
