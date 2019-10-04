@@ -42,7 +42,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     public final static String RECORD_FILE_DIR =
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
-    private final int Vibrate_RECORD_CYCLE = 2000;          // wav 파일 레코딩 주기
+    private final int Half_RECORD_CYCLE = 2000;          // wav 파일 레코딩 주기
 
     private Timer mTimer;
     private RecordTask recordTask;                  // 주기별로 녹음하고 요청처리하는 Task
@@ -160,7 +160,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         return view;
     }
 
-    private class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+    public class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         /* 임시 데이터 */
         public ArrayList<DangerData> listData = new ArrayList<>();
@@ -281,11 +281,11 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             dialog.show(getActivity().getSupportFragmentManager(), "tag"); // 팝업 출력
 
             // 4초 후 팝업 자동 종료
-            FragmentDialog.delayTime(RECORD_CYCLE, dialog);
+            FragmentDialog.delayTime(Half_RECORD_CYCLE, dialog);
 
             // 진동 구현
             Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(Vibrate_RECORD_CYCLE);
+            vibrator.vibrate(Half_RECORD_CYCLE);
         }
     }
 }
