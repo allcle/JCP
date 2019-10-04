@@ -24,7 +24,6 @@ public class DangerData {
     }
 
     public DangerData(String name, Drawable img) {
-        this.name = name;
         this.img = img;
         this.isListening = false;
     }

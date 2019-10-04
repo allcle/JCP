@@ -69,8 +69,7 @@ public class WavRecorder {
         double sum = 0;
         double sqsum = 0;
         int len = data.length;
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             final long v = data[i];
             sum += v;
             sqsum += v * v;
@@ -81,7 +80,7 @@ public class WavRecorder {
         double result = Math.log10(power) * 10f + FUDGE;
         Log.d("데시벨 in WavRecorder : ", String.valueOf(result));
 
-        return result;
+        return Math.abs(result);
     }
 
     private String getFilename() {

@@ -163,7 +163,10 @@ public class SttFragment extends Fragment {
 
             @Override
             public void onPartialResults(Bundle bundle) {
-
+                ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (results != null) {
+                    txt_dictate.setText(results.get(0));
+                }
             }
 
             @Override

@@ -1,5 +1,6 @@
 package com.jcp.herehear.Class;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.jcp.herehear.Fragment.DangerFragment;
@@ -25,14 +26,15 @@ public class HttpSoundRequest extends Thread {
     //private final String SERVER_URL = "http://10.0.2.2:8000/uploads/";
     private final String SERVER_URL = "http://35.233.183.56:8000/uploads/";
     private double powerDb;
-    private final double LIMIT_DECIBEL = 65.0;
+    private final double LIMIT_DECIBEL = 20.0;
     private final MediaType CONTENT_TYPE = MediaType.parse("audio/wav");
     private AsyncResponse delegate;
-
+    private OkHttpClient okHttpClient;
 
     public HttpSoundRequest(double powerDb, AsyncResponse delegate) {
         this.powerDb = powerDb;
         this.delegate = delegate;
+        this.okHttpClient = new OkHttpClient();
     }
 
     @Override
@@ -41,13 +43,13 @@ public class HttpSoundRequest extends Thread {
         Log.d("Msg", "sendDjango, startRecording 절차식 동작");
         Log.d("powerDb : ", String.valueOf(powerDb));
         /* TODO : 안드로이드에서 사용시 비교 좌항을 powerDb로 바꾸기 */
-        //if(powerDb >= LIMIT_DECIBEL){
-        if(90 >= LIMIT_DECIBEL){
+        if(powerDb >= LIMIT_DECIBEL){
+//        if(90 >= LIMIT_DECIBEL){
             Log.d("msg : ", "powerDb가 65를 초과했습니다.");
             /* 여기서 Http 요청 */
             try {
 
-                OkHttpClient okHttpClient = new OkHttpClient();
+//                OkHttpClient okHttpClient = new OkHttpClient();
                 File wavFile = new File(DangerFragment.RECORD_FILE_DIR);
                 /*
 

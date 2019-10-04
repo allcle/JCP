@@ -19,14 +19,16 @@
             android:gravity="center_vertical"
             android:background="@drawable/custom_border_top">
 
-            <pl.droidsonroids.gif.GifImageView
+            <ImageView
                 android:id="@+id/DangerFragmentAdapter_ImageView_soundPlay"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
                 android:layout_marginHorizontal="20dp"
-                android:background="@color/background"
-                android:backgroundTint="@color/background"
-                android:src="@drawable/sound_off" />
+                android:src="@drawable/speaker_off"/>
+
+<!--                android:background="@color/background"-->
+<!--                android:backgroundTint="@color/background"-->
+<!--                android:src="@drawable/sound_off" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"

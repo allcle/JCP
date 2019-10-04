@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.util.Log;
@@ -52,16 +54,18 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     private RecyclerView recyclerView;              // 리사이클러 뷰
     private RecyclerAdapter recyclerAdapter;        // 리사이클러 뷰 어댑터
     private TextView txtTime;                       // 진행 시간 표시 뷰
-    private GifImageView imgvPlay;                  // 사운드 리스팅 이미지뷰
+    private ImageView imgvPlay;                     // 사운드 리스팅 이미지뷰
 
     /* Listening */
     private boolean isListening;                    // 현재 듣기 여부
     private long baseTime;                          // 경과 시간 체크를 위한 현재 시간 저장
     private HttpSoundRequest.AsyncResponse delegate;// Callback 처리를 위한 delegate
+    private FragmentDialog fragmentDialog;          // Callback 에서 다이얼로그를 띄워줌.
+    private UI_DangerHandler uiDangerHandler;       // Callback 에서 메인스레드 UI 충돌방지를 위한 핸들러 사용
 
     /* 생성자 */
     public DangerFragment() {
-
+        uiDangerHandler = new UI_DangerHandler();
     }
 
     /* Time Handler - 타이머 클래스 */
@@ -113,15 +117,6 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                         Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
                         isListening = true;
                         imgvPlay.setImageResource(R.drawable.sound_on);
-
-                        /* 팝업 실험 코드.. 장고 클라우드에 업로드하면 지울 것 */
-                        /*
-                        FragmentDialog dialog = new FragmentDialog();
-                        dialog.show(getActivity().getSupportFragmentManager(), "tag");
-                        FragmentDialog.delayTime(RECORD_CYCLE, dialog);
-                        Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(RECORD_CYCLE);
-                         */
 
                         /* 진행시간 갱신 */
                         baseTime = SystemClock.elapsedRealtime();
@@ -214,8 +209,6 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
 
             final DangerData curData = listData.get(position);
-
-//            holder.txtTypeText.setText(curData.getName());
             holder.imgvTypeIcon.setImageDrawable(curData.getImg());
 
             if (curData.getListening()) {
@@ -239,14 +232,12 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imgvTypeIcon;
-        private TextView txtTypeText;
         private GifImageView imgvWave;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imgvTypeIcon = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_SoundTypeIcon);
-//            txtTypeText = itemView.findViewById(R.id.DangerFragmentAdapter_TextView_SoundTypeName);
             imgvWave = itemView.findViewById(R.id.DangerFragmentAdapter_ImageView_Wave);
 
         }
@@ -266,26 +257,68 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     public void onSoundResponseResult(int index) {
         Log.d("Classified .wav ", String.valueOf(index));
 
+        /* 종료가 되고 http 로 수신했을 때는 처리하지 않는다. */
+        if(!isListening) return;
+
         /* 그래프 움짤을 바꾸는 코드 */
-        recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
-        recyclerAdapter.listData.get(index).setListening(true);
-        recyclerAdapter.preListeningIdx = index;
-        recyclerAdapter.notifyDataSetChanged();
+        Message msg = new Message();
+        msg.what = uiDangerHandler.HANDLE_RECYCLER_NOTIFY;
+        msg.obj = index;
+        uiDangerHandler.sendMessage(msg);
 
         /* 팝업 출력 코드 */
         // index가 5로 판별되어 배경음인 경우, 팝업 출력 자체를 안한다.
         if(index < 5 && index >= 0){
             MainActivity mainActivity = (MainActivity)getActivity(); // 메인 엑티비티 가져오기
-            FragmentDialog dialog = new FragmentDialog(); // 출력하고자 하는 팝업 dialog 생성자 호출
-            dialog.setIndex(index); // 판별한 결과를 팝업에 전달
-            dialog.show(getActivity().getSupportFragmentManager(), "tag"); // 팝업 출력
+            if(fragmentDialog != null){
+                fragmentDialog.dismiss();
+                fragmentDialog = null;
+            }
+            fragmentDialog = new FragmentDialog(); // 출력하고자 하는 팝업 dialog 생성자 호출
+            fragmentDialog.setIndex(index); // 판별한 결과를 팝업에 전달
+            fragmentDialog.show(getActivity().getSupportFragmentManager(), "tag"); // 팝업 출력
 
             // 4초 후 팝업 자동 종료
-            FragmentDialog.delayTime(RECORD_CYCLE, dialog);
+            /*
+
+                이전의 Fragment 가 on 일 경우 끄고 다시 시작하는 방식으로 만들었습니다.
+
+            */
+//            FragmentDialog.delayTime(RECORD_CYCLE, dialog);
 
             // 진동 구현
+            /* TODO : 진동 구현 방식 찾아야 함! */
             Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
             vibrator.vibrate(Vibrate_RECORD_CYCLE);
         }
     }
+
+    /*
+
+        Callback 을 받아 UI 를 처리하더라도 여러 쓰레드에서 겹쳐서 callback
+        처리된다면 메인 UI 쓰레드에서 돌아가지 않는듯 하다.
+        이때 recyclerview.notifyDataSetChanged() 가 메인쓰레드에서 콜이 안되어
+        예외가 발생, UI 처리가 꼬이게 됨.
+
+        따라서 Callback 으로 받고 callback 에서는 UI 핸들러 메세지를 보내는 방식으로 구현.
+
+    */
+    private class UI_DangerHandler extends Handler{
+
+        public final int HANDLE_RECYCLER_NOTIFY = 0;
+
+        public void handleMessage(Message msg){
+            switch(msg.what){
+                case HANDLE_RECYCLER_NOTIFY:
+                    int index = (int)msg.obj;
+                    recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
+                    recyclerAdapter.listData.get(index).setListening(true);
+                    recyclerAdapter.preListeningIdx = index;
+                    recyclerAdapter.notifyDataSetChanged();
+                    Log.d("Handler operate", "recyclerAdapter Notified");
+            }
+        }
+
+    }
+
 }

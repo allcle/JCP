@@ -96,12 +96,14 @@ public class FragmentDialog extends DialogFragment {
         at com.jcp.herehear.Class.HttpSoundRequest.run(HttpSoundRequest.java:94)
 
     * */
-    public static void delayTime(long time, final DialogFragment df) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                df.dismiss();
-            }
-        }, time);
-    }
+//    public static void delayTime(long time, final DialogFragment df) {
+//        new Thread(
+//        ).run();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                df.dismiss();
+//            }
+//        }, time);
+//    }
 }
