@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -33,4 +34,5 @@ dependencies {
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.18'
     implementation "com.squareup.okhttp3:okhttp:4.2.0"
+    implementation 'com.google.firebase:firebase-database:19.1.0'
 }

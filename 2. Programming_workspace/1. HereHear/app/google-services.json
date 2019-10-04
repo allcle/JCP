@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "852460036030",
+    "firebase_url": "https://here-f6a17.firebaseio.com",
+    "project_id": "here-f6a17",
+    "storage_bucket": "here-f6a17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852460036030:android:e7b9e867a97120c4f8e3ef",
+        "android_client_info": {
+          "package_name": "com.devjk.HereHear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852460036030-m4rm2nmn8u2rapqpn368gj0n188u0s2f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devjk.HereHear",
+            "certificate_hash": "b1b3b7eca5b96270b7cab8777ce8c917287efc8a"
+          }
+        },
+        {
+          "client_id": "852460036030-isnni7i1q9sb2ofibeg2259l1qd0udm8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs7nf7hgWPFC0_byC59mWyis2F0gtN130"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852460036030-isnni7i1q9sb2ofibeg2259l1qd0udm8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
