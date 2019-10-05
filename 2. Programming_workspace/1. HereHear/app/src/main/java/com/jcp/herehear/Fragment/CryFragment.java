@@ -1,4 +1,3 @@
-
 package com.jcp.herehear.Fragment;
 
 import android.os.Bundle;
@@ -7,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,19 +17,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jcp.herehear.Activity.MainActivity;
+import com.jcp.herehear.Class.AudioListening;
 import com.jcp.herehear.Class.CryData;
 import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.R;
 import java.util.ArrayList;
 
-public class CryFragment extends Fragment implements TimeHandler.TimeHandleResponse, ValueEventListener {
+public class CryFragment extends Fragment implements TimeHandler.TimeHandleResponse, ValueEventListener, AudioListening {
 
     /* Time Handler - 타이머 클래스 */
     private final TimeHandler myTimer = new TimeHandler(this);
@@ -47,8 +50,6 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
     CryFragment thisFragment;                          // 인터페이스 상속 Onclicklistener 내부 사용 위한 저장.
     private FirebaseDatabase firebaseDatabase;         // Firebase DB
     private DatabaseReference databaseReference;       // Firebase DB 특정 경로
-    private CryData previousData;                      // 이전 상태값 저장
-    private boolean isCryWaiting;                      // 아이 울음 3초를 기다리고 있는 상태
 
     /* 생성자 */
     public CryFragment() {
@@ -77,40 +78,14 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
 
         for(DataSnapshot data : iter){
             CryData obj = data.getValue(CryData.class);
-            obj.setTimeFormatted();
             Log.d("Firebase DB Changed!", "CRY STATE : " + obj.getState());
             Log.d("Firebase DB Changed!", "CRY TIME : " + obj.getTime());
-            Log.d("Firebase DB Changed!", "CRY HOUR : " + obj.getFormattedTime().getHours());
-            Log.d("Firebase DB Changed!", "CRY MINUTE : " + obj.getFormattedTime().getMinutes());
-            Log.d("Firebase DB Changed!", "CRY SECOND : " + obj.getFormattedTime().getSeconds());
 
+            /* 아이가 울고 있는 상태일 경우 업데이트 */
             if(obj.getState() == CryData.STATE_CRY){
-                /*
-
-                    현재 바뀐 DB의 상태가 우는 상태 일 때
-
-                    0 -> 1 로 바뀌었는지,
-                    1 -> 1 로 바뀌었는지 체크
-
-                */
-                if(previousData.getState() == CryData.STATE_CRY){
-                    /* 1 -> 1 : previousData 와 비교하여 3초 경과했는지 체크*/
-
-                }else{
-                    /* 0 -> 1 : previousData 를 갱신 */
-                    previousData = obj;
-                    isCryWaiting = true;
-                }
-            }else{
-                /*
-
-                    현재 바뀐 DB의 상태가 울지 않는 상태 일 때
-
-                    1 -> 0 으로 바뀌었을 것.
-
-                */
-                previousData = obj;
-                isCryWaiting = false;
+                recyclerAdapter.listData.add(obj);
+                recyclerAdapter.notifyDataSetChanged();
+                Log.d("CryFragment", "DataSet Updated!");
             }
 
         }
@@ -136,6 +111,7 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         txtTime = view.findViewById(R.id.CryFragment_TextView_time);
         txtTime.setText("00:00:00");//진행시간 text지정
         imgvPlay = view.findViewById(R.id.CryFragmentAdapter_ImageView_soundPlay);
+        Glide.with(this).load(R.drawable.cry_no).into(imgvPlay);
 
         /* RecyclerView 처리 */
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -146,8 +122,6 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         /* Firebase init */
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("stateData");
-        previousData = new CryData();
-        isCryWaiting = false;
 
         /* Listening 통신 쪽 처리 */
         imgvPlay.setOnClickListener(new View.OnClickListener() {
@@ -162,34 +136,53 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
                     boolean permissionCheck = Permission.CheckPermissionProblem(mainActivity);
 
                     if(permissionCheck){
-                        isListening = true;
-                        imgvPlay.setImageResource(R.drawable.cry_yes);
-
-                        /* Firebase realtime DB Listening 시작 */
-                        databaseReference.addValueEventListener(thisFragment);
-
-                        /* 진행시간 갱신 */
-                        baseTime = SystemClock.elapsedRealtime();
-                        myTimer.sendEmptyMessage(0);
+                        startListening();
                     }
                 } else {
-                    /* 듣기 종료 */
-                    isListening = false;
-                    imgvPlay.setImageResource(R.drawable.cry_no);
-
-                    /* Firebase realtime DB Listening 해제 */
-                    databaseReference.removeEventListener(thisFragment);
-
-                    /* 진행시간 초기화 */
-                    myTimer.removeMessages(0); //핸들러 메세지 제거
-                    txtTime.setText("00:00:00");
-
+                    stopListening();
                 }
             }
 
         });
 
         return view;
+    }
+
+    @Override
+    public void startListening() {
+
+        isListening = true;
+//        imgvPlay.setImageResource(R.drawable.cry_yes);
+        Glide.with(this).load(R.drawable.cry_yes).into(imgvPlay);
+        Animation palpitateAnimate = AnimationUtils.loadAnimation(getContext(), R.anim.palpitate);
+        imgvPlay.startAnimation(palpitateAnimate);
+
+        /* Firebase realtime DB Listening 시작 */
+        recyclerAdapter.listData.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        databaseReference.addValueEventListener(thisFragment);
+
+        /* 진행시간 갱신 */
+        baseTime = SystemClock.elapsedRealtime();
+        myTimer.sendEmptyMessage(0);
+    }
+
+    @Override
+    public void stopListening() {
+        if(!isListening) return;
+
+        /* 듣기 종료 */
+        isListening = false;
+//        imgvPlay.setImageResource(R.drawable.cry_no);
+        Glide.with(this).load(R.drawable.cry_no).into(imgvPlay);
+        imgvPlay.clearAnimation();
+
+        /* Firebase realtime DB Listening 해제 */
+        databaseReference.removeEventListener(thisFragment);
+
+        /* 진행시간 초기화 */
+        myTimer.removeMessages(0); //핸들러 메세지 제거
+        txtTime.setText("00:00:00");
     }
 
     /*데이터: [시간, 소리크기] 리스트 Array*/
@@ -225,9 +218,10 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
 
             final CryData curData = listData.get(position);
+            String curNo = String.valueOf(position + 1);
 
-            holder.whenCryText.setText(curData.getTime());
-            holder.howCryText.setText("NULL");
+            holder.txtNo.setText(curNo);
+            holder.txtCryTime.setText(curData.getTime());
 
         }
 
@@ -240,14 +234,14 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView whenCryText;
-        private TextView howCryText;
+        private TextView txtNo;
+        private TextView txtCryTime;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            whenCryText = itemView.findViewById(R.id.CryFragmentAdapter_TextView_whenCry);
-            howCryText = itemView.findViewById(R.id.CryFragmentAdapter_TextView_howCry);
+            txtNo = itemView.findViewById(R.id.CryFragmentAdapter_TextView_index);
+            txtCryTime= itemView.findViewById(R.id.CryFragmentAdapter_TextView_cryTime);
         }
     }
 }

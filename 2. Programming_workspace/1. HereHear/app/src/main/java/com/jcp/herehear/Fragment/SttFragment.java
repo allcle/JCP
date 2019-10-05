@@ -9,12 +9,17 @@ import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.GenericTransitionOptions;
+import com.bumptech.glide.Glide;
 import com.jcp.herehear.Activity.MainActivity;
+import com.jcp.herehear.Class.AudioListening;
 import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.R;
 
@@ -29,17 +34,16 @@ import java.util.Locale;
     SpeechRecognition 을 사용.
 
 */
-
-public class SttFragment extends Fragment {
+public class SttFragment extends Fragment implements AudioListening {
 
     /* 멤버 변수 */
-    private ImageView imgv_mic;             // 마이크 아이콘
-    private TextView txt_announce;          // 마이크 안내 텍스트
+    private ImageView imgv_ui;              // 번역 창 이미
     private TextView txt_dictate;           // 번역 자막 텍스트
+    private TextView txt_announce;          // 번역 중 안내 텍스트
 
     private SpeechRecognizer mRecognizer;   // 음성 인식기
     private Intent speechIntent;            // 음성 인식 인텐트
-    private boolean isDictating;            // 현재 번역 진행 여부
+    private boolean isListening;            // 현재 번역 진행 여부
 
     /* 생성자 */
     public SttFragment() {
@@ -52,33 +56,35 @@ public class SttFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_stt, container, false);
 
-        /* 권한 체크 */
-        // setSpeechPermission();
-
         /* 초기화 */
-        imgv_mic = view.findViewById(R.id.SttFragment_ImageView_Mic);
+        imgv_ui = view.findViewById(R.id.SttFragment_ImageView_dictateImage);
+        txt_dictate = view.findViewById(R.id.SttFragment_TextView_dictatedText);
         txt_announce = view.findViewById(R.id.SttFragment_TextView_announce);
-        txt_dictate = view.findViewById(R.id.SttFragment_TextView_dictate);
-        isDictating = false;
+        txt_announce.setVisibility(View.INVISIBLE);
+        isListening = false;
+
+        /* Glide 이미지 초기화 */
+        Glide.with(this).load(R.drawable.text_box).into(imgv_ui);
 
         /* 음성인식 초기화 */
         initializeSpeechRecognizer();
 
         /* Onclick Listener */
-        imgv_mic.setOnClickListener(new View.OnClickListener() {
+        imgv_ui.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isDictating){
+                if(!isListening){
                     /* 음성인식 재생 아닌 상태 - 시작 */
                     /* Fragment Permission 체크 */
                     MainActivity mainActivity = (MainActivity)getActivity();
                     Permission.CheckAllPermission(mainActivity);
                     boolean permissionCheck = Permission.CheckPermissionProblem(mainActivity);
+
                     if(permissionCheck)
-                        speak();
+                        startListening();
                 }else{
                     /* 음성인식 재생 중인 상태 - 중단 */
-                    stopSpeak();
+                    stopListening();
                 }
 
             }
@@ -87,36 +93,13 @@ public class SttFragment extends Fragment {
         return view;
     }
 
-    /* 권한 체크 */
-    private void setSpeechPermission() {
-
-        /* 권한 체크부터 하고 권한이 허용되어 있지 않으면 설정으로 넘어간다. */
-        /*
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-
-            if(!(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO)
-                    == PackageManager.PERMISSION_GRANTED)){
-
-                Toast.makeText(getContext(), "마이크권한을 허용하고 다시 시작하세요", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:"+getContext().getPackageName()));
-                startActivity(intent);
-                getActivity().finish();
-
-            }
-
-        }
-         */
-
-    }
-
     /* SpeechRecognizer Settings */
     private void initializeSpeechRecognizer() {
 
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
 
         speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
@@ -158,12 +141,15 @@ public class SttFragment extends Fragment {
                 if (results != null) {
                     txt_dictate.setText(results.get(0));
                 }
-
+                stopListening();
             }
 
             @Override
             public void onPartialResults(Bundle bundle) {
-
+                ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (results != null) {
+                    txt_dictate.setText(results.get(0));
+                }
             }
 
             @Override
@@ -173,28 +159,32 @@ public class SttFragment extends Fragment {
         });
     }
 
-    /* 음성인식 중단 */
-    private void stopSpeak(){
-
-        mRecognizer.stopListening();
-        isDictating = false;
-
-        txt_announce.setText(R.string.SttFragment_touchMic);
-        txt_announce.setTextColor(Color.BLACK);
-        imgv_mic.setImageResource(R.drawable.icon_mic_off);
-
-    }
 
     /* 음성인식 시작 */
-    private void speak(){
-
+    @Override
+    public void startListening() {
         mRecognizer.startListening(speechIntent);
-        isDictating = true;
+        isListening = true;
 
-        txt_announce.setText(R.string.SttFragment_speakMic);
-        txt_announce.setTextColor(Color.MAGENTA);
-        imgv_mic.setImageResource(R.drawable.icon_mic_on);
+//        Glide.with(this)
+//                .load(R.drawable.text_box)
+//                .transition(GenericTransitionOptions.with(R.anim.flicking))
+//                .into(imgv_ui);
 
+        Animation flickAnimate = AnimationUtils.loadAnimation(getContext(), R.anim.flicking);
+        txt_announce.setVisibility(View.VISIBLE);
+        txt_announce.startAnimation(flickAnimate);
     }
 
+    /* 음성인식 중단 */
+    @Override
+    public void stopListening() {
+        if(!isListening) return;
+
+        mRecognizer.stopListening();
+        isListening = false;
+
+        txt_announce.setVisibility(View.INVISIBLE);
+        txt_announce.clearAnimation();
+    }
 }

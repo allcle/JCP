@@ -1,5 +1,6 @@
-
 package com.jcp.herehear.Class;
+
+import java.util.Date;
 
 /*
 
@@ -13,10 +14,6 @@ package com.jcp.herehear.Class;
 
 */
 
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class CryData {
 
     /* member variables */
@@ -24,17 +21,11 @@ public class CryData {
     public final static int STATE_NOCRY = 0;                 // 아이 안우는 상태
     private int State;                                       // 아이 상태 저장
     private String Time;                                     // 아이 상태 변화 시간
-    private Date formatedTime;                               // 시간 포매터
 
     /* constructor */
     public CryData() {
         this.State = STATE_NOCRY;
         this.Time = "";
-    }
-
-    /* Time 값을 포맷화 해서 저장한다. */
-    public void setTimeFormatted(){
-        formatedTime = new Date(Time);
     }
 
     /* getter, setter */
@@ -52,10 +43,6 @@ public class CryData {
 
     public void setTime(String time) {
         Time = time;
-    }
-
-    public Date getFormattedTime(){
-        return formatedTime;
     }
 
 }

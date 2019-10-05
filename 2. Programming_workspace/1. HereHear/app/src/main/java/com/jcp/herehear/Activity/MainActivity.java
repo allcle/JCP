@@ -1,5 +1,6 @@
 package com.jcp.herehear.Activity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -10,8 +11,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.jcp.herehear.Class.AudioListening;
 import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Fragment.CryFragment;
 import com.jcp.herehear.Fragment.DangerFragment;
@@ -37,14 +40,12 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;           // 뷰 페이저
     private AppBarLayout mAppLayout;        // App 바 레이아웃
     private TabLayout mTabLayout;           // 탭 레이아웃
-    private ImageView imgStt;               // 번역하기 탭 이미지뷰
-    private ImageView imgDanger;            // 위험소리 탭 이미지뷰
-    private ImageView imgCry;               // 울음소리 탭 이미지뷰
 
     /* 탭 번호 정의 - 0.번역, 1.위험소리, 2.울음소리 */
     private final int TAB_DICTATE = 0;
     private final int TAB_DANGER = 1;
     private final int TAB_CRY = 2;
+    private int currentIdx;
     //private final int MY_PERMISSIONS_REQUEST_CAMERA = 1001;
 
     /* 탭 메뉴 파일 정의 */
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             {R.drawable.tab_cry_selected_stt, R.drawable.tab_cry_selected_danger, R.drawable.tab_cry_selected_cry}
     };
 
+    private Drawable tabImgDrawable[][];
+
 
     /*
 
@@ -82,11 +85,21 @@ public class MainActivity extends AppCompatActivity {
         /* Permission 체크 */
         Permission.CheckAllPermission(MainActivity.this);
 
+        /* 사전에 9개의 Drawable 을 로드 해놓는다. */
+        tabImgDrawable = new Drawable[3][3];
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                tabImgDrawable[i][j] = getResources().getDrawable(tabImg[i][j]);
+            }
+        }
+
         /* ViewPager 및 TabLayout 세팅 */
         mAppLayout = findViewById(R.id.MainActivity_AppBarLayout_barLayout);
         mViewPager = findViewById(R.id.MainActivity_ViewPager_viewPager);
         mTabLayout = findViewById(R.id.MainActivity_TabLayout_tabLayout);
         setViewPager(mViewPager, mTabLayout);
+        currentIdx = 0;
+
     }
 
     /*
@@ -116,22 +129,30 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int selectedIdx) {
 
                 /*
+
                     각 페이지가 선택될 때 마다 이벤트를 정의한다.
 
                     탭의 이미지를 갱신함.
 
                 */
-
                 int pageSize = adapter.getCount();
                 for (int currentIdx = 0; currentIdx < pageSize; currentIdx++) {
                     TabLayout.Tab tab = tabLayout.getTabAt(currentIdx);
                     ImageView tpImg = (ImageView) tab.getCustomView();
-                    tpImg.setImageResource(
-                            tabImg[currentIdx][selectedIdx]
-                    );
+//                    tpImg.setImageDrawable(tabImgDrawable[currentIdx][selectedIdx]);
+                    Glide.with(getBaseContext()).load(tabImgDrawable[currentIdx][selectedIdx]).into(tpImg);
                     tab.setCustomView(tpImg);
-
                 }
+
+                /*
+
+                    이전 페이지가 듣기 중인 상태이면 해제 함.
+
+                */
+                AudioListening audioListening = (AudioListening)adapter.getItem(currentIdx);
+                currentIdx = selectedIdx;
+                audioListening.stopListening();
+
 
             }
 
@@ -154,9 +175,10 @@ public class MainActivity extends AppCompatActivity {
             ImageView tpImg = new ImageView(this);
             /* 이미지 가로 스케일 맞춘다 */
             tpImg.setScaleType(ImageView.ScaleType.FIT_XY);
-            tpImg.setImageResource(
-                    tabImg[currentIdx][TAB_DICTATE]
-            );
+//            tpImg.setImageDrawable(
+//                    tabImgDrawable[currentIdx][TAB_DICTATE]
+//            );
+            Glide.with(this).load(tabImgDrawable[currentIdx][TAB_DICTATE]).into(tpImg);
             tab.setCustomView(tpImg);
         }
 

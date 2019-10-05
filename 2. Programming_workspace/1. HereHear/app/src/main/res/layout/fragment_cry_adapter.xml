@@ -2,24 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="45dp"
     android:gravity="center_vertical"
     android:background="@drawable/custom_border_center" >
 
     <LinearLayout
         android:layout_width="100dp"
-        android:layout_height="60dp"
+        android:layout_height="45dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:background="@drawable/custom_border_center">
 
 
         <TextView
-            android:id="@+id/CryFragmentAdapter_TextView_whenCry"
+            android:id="@+id/CryFragmentAdapter_TextView_index"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="11sp"
-            android:text="오전11:23"/>
+            android:text="1"/>
 
     </LinearLayout>
 
@@ -32,10 +32,10 @@
 
 
         <TextView
-            android:id="@+id/CryFragmentAdapter_TextView_howCry"
+            android:id="@+id/CryFragmentAdapter_TextView_cryTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="45dB"
+            android:text="2019.04.09 11:12:45"
             android:textSize="11sp" />
     </LinearLayout>
 
