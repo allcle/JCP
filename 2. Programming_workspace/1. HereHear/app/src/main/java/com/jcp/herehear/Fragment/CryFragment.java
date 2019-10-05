@@ -15,19 +15,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jcp.herehear.Activity.MainActivity;
+import com.jcp.herehear.Class.AudioListening;
 import com.jcp.herehear.Class.CryData;
 import com.jcp.herehear.Class.Permission;
 import com.jcp.herehear.Class.TimeHandler;
 import com.jcp.herehear.R;
 import java.util.ArrayList;
 
-public class CryFragment extends Fragment implements TimeHandler.TimeHandleResponse, ValueEventListener {
+public class CryFragment extends Fragment implements TimeHandler.TimeHandleResponse, ValueEventListener, AudioListening {
 
     /* Time Handler - 타이머 클래스 */
     private final TimeHandler myTimer = new TimeHandler(this);
@@ -131,34 +133,50 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
                     boolean permissionCheck = Permission.CheckPermissionProblem(mainActivity);
 
                     if(permissionCheck){
-                        isListening = true;
-                        imgvPlay.setImageResource(R.drawable.cry_yes);
-
-                        /* Firebase realtime DB Listening 시작 */
-                        databaseReference.addValueEventListener(thisFragment);
-
-                        /* 진행시간 갱신 */
-                        baseTime = SystemClock.elapsedRealtime();
-                        myTimer.sendEmptyMessage(0);
+                        startListening();
                     }
                 } else {
-                    /* 듣기 종료 */
-                    isListening = false;
-                    imgvPlay.setImageResource(R.drawable.cry_no);
-
-                    /* Firebase realtime DB Listening 해제 */
-                    databaseReference.removeEventListener(thisFragment);
-
-                    /* 진행시간 초기화 */
-                    myTimer.removeMessages(0); //핸들러 메세지 제거
-                    txtTime.setText("00:00:00");
-
+                    stopListening();
                 }
             }
 
         });
 
         return view;
+    }
+
+    @Override
+    public void startListening() {
+
+        isListening = true;
+//        imgvPlay.setImageResource(R.drawable.cry_yes);
+        Glide.with(this).load(R.drawable.cry_yes).into(imgvPlay);
+
+        /* Firebase realtime DB Listening 시작 */
+        recyclerAdapter.listData.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        databaseReference.addValueEventListener(thisFragment);
+
+        /* 진행시간 갱신 */
+        baseTime = SystemClock.elapsedRealtime();
+        myTimer.sendEmptyMessage(0);
+    }
+
+    @Override
+    public void stopListening() {
+        if(!isListening) return;
+
+        /* 듣기 종료 */
+        isListening = false;
+//        imgvPlay.setImageResource(R.drawable.cry_no);
+        Glide.with(this).load(R.drawable.cry_no).into(imgvPlay);
+
+        /* Firebase realtime DB Listening 해제 */
+        databaseReference.removeEventListener(thisFragment);
+
+        /* 진행시간 초기화 */
+        myTimer.removeMessages(0); //핸들러 메세지 제거
+        txtTime.setText("00:00:00");
     }
 
     /*데이터: [시간, 소리크기] 리스트 Array*/

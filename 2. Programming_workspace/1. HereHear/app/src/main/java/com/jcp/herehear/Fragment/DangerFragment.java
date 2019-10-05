@@ -22,7 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jcp.herehear.Activity.MainActivity;
+import com.jcp.herehear.Class.AudioListening;
 import com.jcp.herehear.Class.DangerData;
 import com.jcp.herehear.Class.HttpSoundRequest;
 import com.jcp.herehear.Class.Permission;
@@ -35,16 +37,14 @@ import com.jcp.herehear.R;
 import java.util.ArrayList;
 import java.util.Timer;
 
-import pl.droidsonroids.gif.GifImageView;
-
-public class DangerFragment extends Fragment implements TimeHandler.TimeHandleResponse, HttpSoundRequest.AsyncResponse {
+public class DangerFragment extends Fragment implements TimeHandler.TimeHandleResponse, HttpSoundRequest.AsyncResponse, AudioListening {
 
     private final String RECORD_FILE_NAME =
             "recorded.wav";                         // wav 파일 이름
     public final static String RECORD_FILE_DIR =
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
-    private final int Half_RECORD_CYCLE = 2000;          // wav 파일 레코딩 주기
+    private final int Half_RECORD_CYCLE = 2000;     // wav 파일 레코딩 주기
 
     private Timer mTimer;
     private RecordTask recordTask;                  // 주기별로 녹음하고 요청처리하는 Task
@@ -113,46 +113,62 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
                     Permission.CheckAllPermission(mainActivity);
                     boolean permissionCheck = Permission.CheckPermissionProblem(mainActivity);
                     if(permissionCheck){
-                        /* 듣기 시작 */
-                        Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
-                        isListening = true;
-                        imgvPlay.setImageResource(R.drawable.sound_on);
-
-                        /* 진행시간 갱신 */
-                        baseTime = SystemClock.elapsedRealtime();
-                        timeHandler.sendEmptyMessage(0);
-
-                        /* 레코딩 시작 */
-                        recordTask = new RecordTask(wavRecorder, delegate);
-                        wavRecorder.startRecording();
-                        mTimer = new Timer();
-                        mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
-
-                        /* 레코딩 관련 본코드 */
-                        recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(true);
-                        recyclerAdapter.notifyDataSetChanged();
+                        startListening();
                     }
                 } else {
-                    /* 듣기 종료 */
-                    isListening = false;
-                    imgvPlay.setImageResource(R.drawable.sound_off);
-
-                    /* 진행시간 초기화 */
-                    timeHandler.removeMessages(0); //핸들러 메세지 제거
-                    txtTime.setText("00:00:00");
-
-                    /* 레코딩 종료 */
-                    wavRecorder.stopRecording();
-                    mTimer.cancel();
-
-                    recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
-                    recyclerAdapter.preListeningIdx = 5;
-                    recyclerAdapter.notifyDataSetChanged();
+                    stopListening();
                 }
             }
 
         });
         return view;
+    }
+
+    /* 오디오 리스닝작업 시작 */
+    @Override
+    public void startListening() {
+        /* 듣기 시작 */
+        Log.d("Msg", "startRecoding 동작! 1번만 수행되야 정상.");
+        isListening = true;
+//        imgvPlay.setImageResource(R.drawable.speaker_on);
+        Glide.with(this).load(R.drawable.speaker_on).into(imgvPlay);
+
+        /* 진행시간 갱신 */
+        baseTime = SystemClock.elapsedRealtime();
+        timeHandler.sendEmptyMessage(0);
+
+        /* 레코딩 시작 */
+        recordTask = new RecordTask(wavRecorder, delegate);
+        wavRecorder.startRecording();
+        mTimer = new Timer();
+        mTimer.schedule(recordTask, RECORD_CYCLE, RECORD_CYCLE);
+
+        /* 레코딩 관련 본코드 */
+        recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(true);
+        recyclerAdapter.notifyDataSetChanged();
+    }
+
+    /* 오디오 리스닝작업 종료 */
+    @Override
+    public void stopListening() {
+        if(!isListening) return;
+
+        /* 듣기 종료 */
+        isListening = false;
+//        imgvPlay.setImageResource(R.drawable.speaker_off);
+        Glide.with(this).load(R.drawable.speaker_off).into(imgvPlay);
+
+        /* 진행시간 초기화 */
+        timeHandler.removeMessages(0); //핸들러 메세지 제거
+        txtTime.setText("00:00:00");
+
+        /* 레코딩 종료 */
+        wavRecorder.stopRecording();
+        mTimer.cancel();
+
+        recyclerAdapter.listData.get(recyclerAdapter.preListeningIdx).setListening(false);
+        recyclerAdapter.preListeningIdx = 5;
+        recyclerAdapter.notifyDataSetChanged();
     }
 
     public class RecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
@@ -209,15 +225,18 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
 
             final DangerData curData = listData.get(position);
-            holder.imgvTypeIcon.setImageDrawable(curData.getImg());
+            Glide.with(getContext()).load(curData.getImg()).into(holder.imgvTypeIcon);
+//            holder.imgvTypeIcon.setImageDrawable(curData.getImg());
 
             if (curData.getListening()) {
                 /* 듣는 중 */
-                holder.imgvWave.setImageResource(R.drawable.voice_on_light);
+//                holder.imgvWave.setImageResource(R.drawable.voice_on_light);
+                Glide.with(getContext()).load(R.drawable.voice_on_light).into(holder.imgvWave);
 
             } else {
                 /* 안 듣는 중 */
-                holder.imgvWave.setImageResource(R.drawable.soundwave_off);
+//                holder.imgvWave.setImageResource(R.drawable.soundwave_off);
+                Glide.with(getContext()).load(R.drawable.soundwave_off).into(holder.imgvWave);
             }
 
         }
@@ -232,7 +251,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imgvTypeIcon;
-        private GifImageView imgvWave;
+        private ImageView imgvWave;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
