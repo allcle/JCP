@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -109,6 +111,7 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         txtTime = view.findViewById(R.id.CryFragment_TextView_time);
         txtTime.setText("00:00:00");//진행시간 text지정
         imgvPlay = view.findViewById(R.id.CryFragmentAdapter_ImageView_soundPlay);
+        Glide.with(this).load(R.drawable.cry_no).into(imgvPlay);
 
         /* RecyclerView 처리 */
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -151,6 +154,8 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         isListening = true;
 //        imgvPlay.setImageResource(R.drawable.cry_yes);
         Glide.with(this).load(R.drawable.cry_yes).into(imgvPlay);
+        Animation palpitateAnimate = AnimationUtils.loadAnimation(getContext(), R.anim.palpitate);
+        imgvPlay.startAnimation(palpitateAnimate);
 
         /* Firebase realtime DB Listening 시작 */
         recyclerAdapter.listData.clear();
@@ -170,6 +175,7 @@ public class CryFragment extends Fragment implements TimeHandler.TimeHandleRespo
         isListening = false;
 //        imgvPlay.setImageResource(R.drawable.cry_no);
         Glide.with(this).load(R.drawable.cry_no).into(imgvPlay);
+        imgvPlay.clearAnimation();
 
         /* Firebase realtime DB Listening 해제 */
         databaseReference.removeEventListener(thisFragment);

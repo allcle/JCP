@@ -1,8 +1,6 @@
 package com.jcp.herehear.Fragment;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +45,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             "/sdcard/AudioRecorder/recorded.wav";   // wav 파일 저장 경로
     private final int RECORD_CYCLE = 4000;          // wav 파일 레코딩 주기
     private final int Half_RECORD_CYCLE = 2000;     // wav 파일 레코딩 주기
+    private final int VIBRATE_CYCLE = 1000;         // 진동 주기
 
     private Timer mTimer;
     private RecordTask recordTask;                  // 주기별로 녹음하고 요청처리하는 Task
@@ -92,6 +93,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         txtTime = view.findViewById(R.id.DangerFragment_TextView_time);
         txtTime.setText("00:00:00");
         imgvPlay = view.findViewById(R.id.DangerFragmentAdapter_ImageView_soundPlay);
+        Glide.with(this).load(R.drawable.speaker_off).into(imgvPlay);
 
         /* RecyclerView 처리 */
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -132,6 +134,8 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         isListening = true;
 //        imgvPlay.setImageResource(R.drawable.speaker_on);
         Glide.with(this).load(R.drawable.speaker_on).into(imgvPlay);
+        Animation palpitateAnimate = AnimationUtils.loadAnimation(getContext(), R.anim.palpitate);
+        imgvPlay.startAnimation(palpitateAnimate);
 
         /* 진행시간 갱신 */
         baseTime = SystemClock.elapsedRealtime();
@@ -157,6 +161,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         isListening = false;
 //        imgvPlay.setImageResource(R.drawable.speaker_off);
         Glide.with(this).load(R.drawable.speaker_off).into(imgvPlay);
+        imgvPlay.clearAnimation();
 
         /* 진행시간 초기화 */
         timeHandler.removeMessages(0); //핸들러 메세지 제거
@@ -182,19 +187,26 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         public RecyclerAdapter() {
 
             /* 경적, 개, 드릴, 총, 사이렌, nothing - 예시로 생성 */
-            Drawable icon_horn = getResources().getDrawable(R.drawable.danger_icon_horn_yes);
-            Drawable icon_barking = getResources().getDrawable(R.drawable.danger_icon_dog_yes);
-            Drawable icon_drill = getResources().getDrawable(R.drawable.danger_icon_drilling_yes);
-            Drawable icon_gun = getResources().getDrawable(R.drawable.danger_icon_gun_yes);
-            Drawable icon_siren = getResources().getDrawable(R.drawable.danger_icon_siren_yes);
-            Drawable icon_nothing = getResources().getDrawable(R.drawable.danger_icon_background_yes);
+            Drawable icon_horn = getResources().getDrawable(R.drawable.danger_icon_horn_no);
+            Drawable icon_barking = getResources().getDrawable(R.drawable.danger_icon_dog_no);
+            Drawable icon_drill = getResources().getDrawable(R.drawable.danger_icon_drilling_no);
+            Drawable icon_gun = getResources().getDrawable(R.drawable.danger_icon_gun_no);
+            Drawable icon_siren = getResources().getDrawable(R.drawable.danger_icon_siren_no);
+            Drawable icon_nothing = getResources().getDrawable(R.drawable.danger_icon_background_no);
 
-            DangerData horn = new DangerData("경적소리", icon_horn);
-            DangerData barking = new DangerData("개짖는소리", icon_barking);
-            DangerData drill = new DangerData("드릴소리", icon_drill);
-            DangerData gun = new DangerData("총소리", icon_gun);
-            DangerData siren = new DangerData("사이렌소리", icon_siren);
-            DangerData nothing = new DangerData("아무소리없음", icon_nothing);
+            Drawable icon_horn_yes = getResources().getDrawable(R.drawable.danger_icon_horn_yes);
+            Drawable icon_barking_yes = getResources().getDrawable(R.drawable.danger_icon_dog_yes);
+            Drawable icon_drill_yes = getResources().getDrawable(R.drawable.danger_icon_drilling_yes);
+            Drawable icon_gun_yes = getResources().getDrawable(R.drawable.danger_icon_gun_yes);
+            Drawable icon_siren_yes = getResources().getDrawable(R.drawable.danger_icon_siren_yes);
+            Drawable icon_nothing_yes = getResources().getDrawable(R.drawable.danger_icon_background_yes);
+
+            DangerData horn = new DangerData("경적소리", icon_horn, icon_horn_yes);
+            DangerData barking = new DangerData("개짖는소리", icon_barking, icon_barking_yes);
+            DangerData drill = new DangerData("드릴소리", icon_drill, icon_drill_yes);
+            DangerData gun = new DangerData("총소리", icon_gun, icon_gun_yes);
+            DangerData siren = new DangerData("사이렌소리", icon_siren, icon_siren_yes);
+            DangerData nothing = new DangerData("아무소리없음", icon_nothing, icon_nothing_yes);
 
             listData.add(horn);
             listData.add(barking);
@@ -225,18 +237,18 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
         public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
 
             final DangerData curData = listData.get(position);
-            Glide.with(getContext()).load(curData.getImg()).into(holder.imgvTypeIcon);
-//            holder.imgvTypeIcon.setImageDrawable(curData.getImg());
 
             if (curData.getListening()) {
                 /* 듣는 중 */
 //                holder.imgvWave.setImageResource(R.drawable.voice_on_light);
                 Glide.with(getContext()).load(R.drawable.voice_on_light).into(holder.imgvWave);
+                Glide.with(getContext()).load(curData.getImg_on()).into(holder.imgvTypeIcon);
 
             } else {
                 /* 안 듣는 중 */
 //                holder.imgvWave.setImageResource(R.drawable.soundwave_off);
                 Glide.with(getContext()).load(R.drawable.soundwave_off).into(holder.imgvWave);
+                Glide.with(getContext()).load(curData.getImg_off()).into(holder.imgvTypeIcon);
             }
 
         }
@@ -311,7 +323,7 @@ public class DangerFragment extends Fragment implements TimeHandler.TimeHandleRe
             // 진동 구현
             /* TODO : 진동 구현 방식 찾아야 함! */
             Vibrator vibrator = (Vibrator) mainActivity.getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(Half_RECORD_CYCLE);
+            vibrator.vibrate(VIBRATE_CYCLE);
         }
     }
 
