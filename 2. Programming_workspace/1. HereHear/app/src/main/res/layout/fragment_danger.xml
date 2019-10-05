@@ -23,8 +23,7 @@
                 android:id="@+id/DangerFragmentAdapter_ImageView_soundPlay"
                 android:layout_width="80dp"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="20dp"
-                android:src="@drawable/speaker_off"/>
+                android:layout_marginHorizontal="20dp"/>
 
 <!--                android:background="@color/background"-->
 <!--                android:backgroundTint="@color/background"-->
@@ -40,12 +39,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/DangerFragment_time"/>
+                    android:text="@string/DangerFragment_time"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"/>
 
                 <TextView
                     android:id="@+id/DangerFragment_TextView_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
                     android:text="11 : 23 : 08"/>
 
             </LinearLayout>
@@ -61,9 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/custom_border_bottom">
-
-
-
+            
         </LinearLayout>
 
     </LinearLayout>

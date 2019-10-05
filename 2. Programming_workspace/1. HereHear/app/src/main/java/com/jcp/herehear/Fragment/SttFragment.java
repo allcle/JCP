@@ -9,11 +9,14 @@ import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.jcp.herehear.Activity.MainActivity;
 import com.jcp.herehear.Class.AudioListening;
@@ -96,6 +99,7 @@ public class SttFragment extends Fragment implements AudioListening {
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
 
         speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
@@ -137,7 +141,7 @@ public class SttFragment extends Fragment implements AudioListening {
                 if (results != null) {
                     txt_dictate.setText(results.get(0));
                 }
-
+                stopListening();
             }
 
             @Override
@@ -162,7 +166,14 @@ public class SttFragment extends Fragment implements AudioListening {
         mRecognizer.startListening(speechIntent);
         isListening = true;
 
+//        Glide.with(this)
+//                .load(R.drawable.text_box)
+//                .transition(GenericTransitionOptions.with(R.anim.flicking))
+//                .into(imgv_ui);
+
+        Animation flickAnimate = AnimationUtils.loadAnimation(getContext(), R.anim.flicking);
         txt_announce.setVisibility(View.VISIBLE);
+        txt_announce.startAnimation(flickAnimate);
     }
 
     /* 음성인식 중단 */
@@ -174,5 +185,6 @@ public class SttFragment extends Fragment implements AudioListening {
         isListening = false;
 
         txt_announce.setVisibility(View.INVISIBLE);
+        txt_announce.clearAnimation();
     }
 }

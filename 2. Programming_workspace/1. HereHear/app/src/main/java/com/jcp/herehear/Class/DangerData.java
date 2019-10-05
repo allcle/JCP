@@ -15,7 +15,8 @@ import android.graphics.drawable.Drawable;
 public class DangerData {
 
     private String name;
-    private Drawable img;
+    private Drawable img_on;
+    private Drawable img_off;
     private boolean isListening;
 
     /* constructor */
@@ -23,8 +24,9 @@ public class DangerData {
 
     }
 
-    public DangerData(String name, Drawable img) {
-        this.img = img;
+    public DangerData(String name, Drawable img_off, Drawable img_on) {
+        this.img_on = img_on;
+        this.img_off = img_off;
         this.isListening = false;
     }
 
@@ -38,12 +40,12 @@ public class DangerData {
         this.name = name;
     }
 
-    public Drawable getImg() {
-        return img;
+    public Drawable getImg_on() {
+        return img_on;
     }
 
-    public void setImg(Drawable img) {
-        this.img = img;
+    public void setImg_on(Drawable img_on) {
+        this.img_on = img_on;
     }
 
     public Boolean getListening() {
@@ -53,6 +55,10 @@ public class DangerData {
     public void setListening(Boolean listening) {
         isListening = listening;
     }
+
+    public Drawable getImg_off() { return img_off; }
+
+    public void setImg_off(Drawable img_off) { this.img_off = img_off; }
 
 }
 
