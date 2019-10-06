@@ -2,7 +2,10 @@
 
 ##### JCP Danger Sound Server : JCP 프로젝트 청각장애인을 위한 위험소리 분류모델 서버
 
+**GCE(임시) + Ubuntu18.04 + Django + Nginx 로 운영중입니다.**
+
 - Server URL : http://35.233.183.56:8000 (임시)
+- JCP Repository : https://github.com/allcle/JCP
 
 
 
@@ -29,8 +32,16 @@ $ source env/bin/activate
 (env)$ pip install pillow
 (env)$ pip install matplotlib
 
-# 서버 실행
+# 테스트 서버 실행 확인
 $ python manage.py runserver
+
+# Nginx, uWSGI 연동방법
+ - https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html
+ - https://twpower.github.io/41-connect-nginx-uwsgi-django
+ 
+# 실 서버 가동(Nginx, uWSGI 환경 설정 완료상태)
+(env)$ uwsgi --socket :8001 --module jcp.wsgi
+
 ```
 
 
@@ -39,17 +50,17 @@ $ python manage.py runserver
 
 ## API Usage
 
-|   Request Type    |          Request Value           |
-| :---------------: | :------------------------------: |
-|     `Method`      |              `POST`              |
-|       `URL`       | `http://SERVERURL:8000/uploads/` |
-|    **HEADER**     |                                  |
-|  `Content-Type`   |      `multipart/form-data`       |
-|     **BODY**      |                                  |
-|      `file`       |      `음성 파일 업로드.wav`      |
-| **Response BODY** |        **Response Value**        |
-|     `result`      |       `소리 인덱스(0 ~ 5)`       |
-|      `sound`      |      `소리 분류( ** 소리)`       |
+|   Request Type    |            Request Value             |
+| :---------------: | :----------------------------------: |
+|     `Method`      |                `POST`                |
+|       `URL`       | `http://35.233.183.56:8000/uploads/` |
+|    **HEADER**     |                                      |
+|  `Content-Type`   |        `multipart/form-data`         |
+|     **BODY**      |                                      |
+|      `file`       |        `음성 파일 업로드.wav`        |
+| **Response BODY** |          **Response Value**          |
+|     `result`      |         `소리 인덱스(0 ~ 5)`         |
+|      `sound`      |        `소리 분류( ** 소리)`         |
 
 
 
