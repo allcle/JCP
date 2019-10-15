@@ -32,3 +32,6 @@ You should have received a copy of the GNU General Public License along with thi
 * 홍익대학교 컴퓨터공학과 2019년도 하반기 졸업프로젝트
 * 2019 공개 SW 개발자 대회
 * 2019 한이음 공모전
+
+### License 목록
+* JCP / 1. Document / 6. 라이선스 목록.md
