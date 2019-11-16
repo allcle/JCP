@@ -2,9 +2,12 @@
 
 ##### JCP Danger Sound Server : JCP 프로젝트 청각장애인을 위한 위험소리 분류모델 서버
 
-**GCE(임시) + Ubuntu18.04 + Django + Nginx 로 운영중입니다.**
+~~**GCE(임시) + Ubuntu18.04 + Django + Nginx 로 운영중입니다.**~~
 
-- Server URL : http://35.233.183.56:8000 (임시)
+**AWS + Ubuntu18.04 + Django + Nginx 로 운영중입니다.** 
+
+- Server IP : 18.216.246.234
+- Server URL : https://ec2-18-216-246-234.us-east-2.compute.amazonaws.com/
 - JCP Repository : https://github.com/allcle/JCP
 
 
@@ -42,8 +45,31 @@ $ python manage.py runserver
 # 실 서버 가동(Nginx, uWSGI 환경 설정 완료상태)
 (env)$ uwsgi --socket :8001 --module jcp.wsgi
 
-```
+# Nginx + SSL 처리방법 - CA 없이 openssl 사용
+- https://blog.iwanhae.ga/nginx-ssl-https/
 
+
+```
+### Installing Error
+1. **OSError: sndfile library not fond**
+> 간혹 클라우드 인스턴스에 기본 사운드 라이브러리가 설치가 안되어 있을 수 있습니다.
+> 관련 라이브러리를 apt-get 설치해주시면 됩니다.
+> 참고자료(StackOverflow) : https://stackoverflow.com/questions/55086834/cant-import-soundfile-python/55086878  
+```
+$ sudo apt-get install libsndfile1
+```
+2. **접속 시도 중 Invalid HTTP_HOST header: '18.216.246.234:8000'.
+You may need to add '18.216.246.234' to ALLOWED_HOSTS. 에러로그 발생 시**
+> settings.py 의 ALLOWED_HOSTS 값에 본 서버의 호스트 주소가 누락되었습니다.
+> 설치할 서버의 IP 주소를 추가해주면 됩니다.
+```
+# To debug 허용된 호스트 - 안드로이드 가상환경에서는 localhost 를 10.0.2.2 로 접근한다.
+# 임시 GCE 서버 IP : 35.223.183.56
+# 한이음 AWS 서버 IP : 18.216.246.234
+# 한이음 DNS name : ec2-18-216-246-234.us-east-2.compute.amazonaws.com
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '35.233.183.56', '18.216.246.234', 
+'ec2-18-216-246-234.us-east-2.compute.amazonaws.com']
+```
 
 
 
@@ -53,7 +79,7 @@ $ python manage.py runserver
 |   Request Type    |            Request Value             |
 | :---------------: | :----------------------------------: |
 |     `Method`      |                `POST`                |
-|       `URL`       | `http://35.233.183.56:8000/uploads/` |
+|       `URL`       | `https://ec2-18-216-246-234.us-east-2.compute.amazonaws.com/uploads/` |
 |    **HEADER**     |                                      |
 |  `Content-Type`   |        `multipart/form-data`         |
 |     **BODY**      |                                      |
@@ -68,7 +94,7 @@ $ python manage.py runserver
 
 ```
 $ curl -X POST \
-  http://35.233.183.56:8000/uploads/ \
+  https://ec2-18-216-246-234.us-east-2.compute.amazonaws.com/uploads/ \
   -H 'cache-control: no-cache' \
   -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
   -F file=@dog_bark35.wav
@@ -83,7 +109,7 @@ $ curl -X POST \
 ```
 POST /uploads/ HTTP/1.1
 Content-Length: 300108
-Host: 35.233.183.56:8000
+Host: https://ec2-18-216-246-234.us-east-2.compute.amazonaws.com/
 Content-Type: multipart/form-data;boundary=------FormBoundaryShouldDifferAtRuntime
 
 ------FormBoundaryShouldDifferAtRuntime

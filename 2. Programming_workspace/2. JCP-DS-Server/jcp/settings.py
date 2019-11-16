@@ -27,7 +27,10 @@ DEBUG = True
 
 # To debug 허용된 호스트 - 안드로이드 가상환경에서는 localhost 를 10.0.2.2 로 접근한다.
 # 임시 GCE 서버 IP : 35.223.183.56
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '35.233.183.56']
+# 한이음 AWS 서버 IP : 18.216.246.234
+# 한이음 DNS name : ec2-18-216-246-234.us-east-2.compute.amazonaws.com
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '35.233.183.56', '18.216.246.234', 
+'ec2-18-216-246-234.us-east-2.compute.amazonaws.com']
 
 
 # Application definition
