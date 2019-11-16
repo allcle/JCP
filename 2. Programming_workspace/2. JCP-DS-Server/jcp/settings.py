@@ -29,8 +29,8 @@ DEBUG = True
 # 임시 GCE 서버 IP : 35.223.183.56
 # 한이음 AWS 서버 IP : 18.216.246.234
 # 한이음 DNS name : ec2-18-216-246-234.us-east-2.compute.amazonaws.com
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '35.233.183.56', '18.216.246.234', 
-'ec2-18-216-246-234.us-east-2.compute.amazonaws.com']
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '35.233.183.56', '52.79.242.64', 
+'ec2-52-79-242-64.ap-northeast-2.compute.amazonaws.com']
 
 
 # Application definition
