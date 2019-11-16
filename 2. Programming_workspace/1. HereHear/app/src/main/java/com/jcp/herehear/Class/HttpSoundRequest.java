@@ -24,7 +24,8 @@ public class HttpSoundRequest extends Thread {
     }
 
     //private final String SERVER_URL = "http://10.0.2.2:8000/uploads/";
-    private final String SERVER_URL = "http://35.233.183.56:8000/uploads/";
+//    private final String SERVER_URL = "http://35.233.183.56:8000/uploads/";
+    private final String SERVER_URL = "http://52.79.242.64/uploads/";
     private double powerDb;
     private final double LIMIT_DECIBEL = 20.0;
     private final MediaType CONTENT_TYPE = MediaType.parse("audio/wav");
