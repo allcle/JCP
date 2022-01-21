@@ -9,7 +9,7 @@ django-debug-toolbar==2.0
 django-extensions==2.2.1
 entrypoints==0.3
 ipykernel==5.1.1
-ipython==7.7.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 ipywidgets==7.5.1
 jedi==0.14.1
